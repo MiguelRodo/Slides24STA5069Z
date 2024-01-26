@@ -1,0 +1,31 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.5.0
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "Slides24STA5069Z" in publications use:'
+type: software
+title: 'Slides24STA5069Z: Slides for 2024 STA5069Z MSc multivariate statistics course'
+version: 0.0.0-1
+abstract: Slides for 2024 STA5069Z MSc multivariate statistics course
+authors:
+- family-names: Rodo
+  given-names: Miguel
+  email: miguel.rodo@uct.ac.za
+preferred-citation:
+  type: generic
+  title: 'Slides24STA5069Z: Slides for 2024 STA5069Z MSc multivariate statistics course'
+  authors:
+  - family-names: Rodo
+    given-names: Miguel
+    email: miguel.rodo@uct.ac.za
+  url: https://github.com/MiguelRodo/Slides24STA5069Z/#readme
+  abstract: Slides for 2024 STA5069Z MSc multivariate statistics course
+  version: 0.0.0-1
+repository-code: https://github.com/MiguelRodo/Slides24STA5069Z
+url: https://github.com/MiguelRodo/Slides24STA5069Z/#readme
+contact:
+- family-names: Rodo
+  given-names: Miguel
+  email: miguel.rodo@uct.ac.za

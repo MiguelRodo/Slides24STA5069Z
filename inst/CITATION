@@ -1,0 +1,10 @@
+citHeader("To cite `Slides24STA5069Z` in publications use:")
+
+bibentry(bibtype = "Misc",
+         key = "rodo",
+         title = "Slides24STA5069Z: Slides for 2024 STA5069Z MSc multivariate statistics course",
+         author = person(given = "Miguel",
+                         family = "Rodo"),
+         url = "https://github.com/MiguelRodo/Slides24STA5069Z/#readme",
+         abstract = "Slides for 2024 STA5069Z MSc multivariate statistics course",
+         version = "0.0.0-1")
