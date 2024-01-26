@@ -1,0 +1,13 @@
+Package: Slides24STA5069Z
+Title: Slides for 2024 STA5069Z MSc multivariate statistics course
+Version: 0.0.0-1
+Authors@R: 
+    person("Miguel", "Rodo", , "miguel.rodo@uct.ac.za", role = c("aut", "cre"))
+Maintainer: Miguel Rodo <miguel.rodo@uct.ac.za>
+Description: Slides for 2024 STA5069Z MSc multivariate statistics course
+License: {{ License }}
+URL: https://github.com/MiguelRodo/Slides24STA5069Z/#readme
+BugReports: https://github.com/MiguelRodo/Slides24STA5069Z/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
