@@ -168,7 +168,7 @@ knitr::include_graphics(
 - **Classical scaling** [@torgerson1952multidimensional;@torgerson1958theory] (references inaccessible via UCT) is a variant of metric MDS that finds the optimal low-rank configuration of points such that their centred inner products match those in the original space as closely possible.
   - It essentially calculates the answer in this direction:
     - Distances -> centred inner products -> low-rank configuration.
-  - The motivation for this is that the optimisation problem has a known solution based on the eigendecomposition, thus avoiding iterative optimisation (in theory).
+  - The motivation for this is that the optimisation problem has a known solution based on the eigendecomposition, thus avoiding iterative optimisation (apart from calculating eigen decomposition).
   - If the distances are Euclidean ($\delta_{ij} = |\mathbf{x}_i - \mathbf{x}_j| = \sqrt{\sum (x_{ik} - x_{jk})^2}$), then the solution matches the principal component solution.
 
 ## Procedure for classical scaling: major steps
