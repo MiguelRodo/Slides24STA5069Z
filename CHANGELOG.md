@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v1.0.6): Miguel Julio Rodo (13:54:32)
+  - Trigger bug
 - Patch (v1.0.5): Miguel Julio Rodo (13:53:43)
   - Trigger bug
 - Patch (v1.0.4): Miguel Julio Rodo (13:49:53)
