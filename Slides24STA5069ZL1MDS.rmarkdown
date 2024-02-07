@@ -1,0 +1,348 @@
+---
+title: Multidimensional scaling (MDS)
+author: Francesca Little (edited by Miguel Rodo)
+bibliography: zotero.bib
+format:
+  beamer:
+    embed-resources: true
+    aspectratio: 169
+---
+
+
+## Example: representing cities' relative locations by airline distance
+
+
+```{r}
+#| results: asis
+#| fig-align: center
+knitr::include_graphics(
+  projr::projr_path_get("data-raw-img", "airline_distance.png")
+)
+```
+
+```{r}
+#| include: false
+library(ggplot2)
+library(cowplot)
+library(tibble)
+library(ggrepel)
+renv::install(c(
+  "ggplot2", "cowplot", "tibble", "ggrepel", "SATVILab/projr"
+))
+```
+
+
+## Two-dimensional MDS map
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{_data_raw/img/airline_mds.png}
+\end{figure}
+
+## What is MDS?
+
+- Goal:
+  - Represent distance-data in a low-dimensional space, typically for visualization.
+  
+\pause
+
+- Contrast with typical dimensionality reduction techniques:
+  - Whilst other such techniques, e.g. PCA, begin with the original data points (i.e. $\symbf{X}$), MDS begins with the dissimilarities or similarities between points.
+
+\pause
+
+- MDS is a family of techniques, differing by:
+  - Valid interpretations of distances between points in generated map (ratio, interval or rank)
+  - Optimisation function
+  - Method of optimisation (eigen-decomposition vs numerical)
+  - Weights of per-distance errors
+
+## Scales of measurement
+
+- Stevens (1946) proposed four scales of measurement:
+  - Ratio: a natural zero exists, meaning ratios can be meaningfully defined.
+    - Example: height.
+    - Non-example: temperature.
+  - Interval: no natural exists, but the differences between points is directly comparable.
+    - Example: temperature.
+    - Non-example: rank-based judgements.
+  - Ordinal: points have a greater than/less than relationship to one another, but the differences between points are not necessarily directly comparable.
+    - Example: rank-based judgements.
+    - Non-example: someone’s name.
+  - Nominal: no greater than/less than relationship between points.
+    - Example: people’s names.
+
+## Categories of MDS techniques
+
+- Metric:
+  - Aim to represent actual distances.
+  - Typically, distances may be interpreted on at least the interval scale.
+  - Sub-techniques:
+    - Classical scaling
+    - Least-squares scaling
+- Non-metric:
+  - Aim to preserve ranks.
+  - Distances only interpretable in an ordinal sense.
+
+## Input data
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Similarity/dissimilarity measure 
+
+- *Purpose*:
+  - Captures differences between two observations
+- *Properties*:
+  - Symmetric: Dissimilarity from object $A$ to $B$ the same as dissimilarity from object $B$ to $A$
+  - Each object has zero distance from itself
+  - Typically: range does not cross zero
+- *Notation*:
+  - Dissimilarity from $i$-th object to $j$-th object: $\delta_{ij}$
+
+:::
+
+::: {.column width="50%"}
+### Proximity matrix
+
+- *Nature*:
+  - Matrix whose $i$-th, $j$-th element is $\delta_{ij}$
+- *Implied properties*:
+  - Symmetric
+  - Hollow (0s on diagonal)
+  - Square ($n \times n$)
+  - Typically, either non-negative or non-positive
+- *Notation*:
+  - Proximity matrix: $\Delta = (\delta_{ij})$
+  - Number of lower off-diagonal elements: $m$
+  - $m = \left\lfloor \frac{n}{2} \right\rfloor = \frac{1}{2} n(n-1)$
+  - Excludes duplicates (taking only one of $\delta_{ij}$ and $\delta_{ji}$) and diagonal elements ($\delta_{ii}$)
+:::
+
+::::
+
+## Example proximity matrix: distances between SA cities
+
+
+```{r}
+#| results: asis
+#| fig-align: center
+knitr::include_graphics(
+  projr::projr_path_get("data-raw-img", "city_distance.png")
+)
+```
+
+
+## Common (dis)similarity measures
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Dissimilarity measures
+
+- **Minkowski distance**:
+  - $\delta_{ij} = \left( \sum_{k=1}^{r} |X_{ik} - X_{jk}|^{p} \right)^{1/p}$
+  - $p=1$: city-block/Manhattan distance
+  - $p=2$: Euclidean distance
+  - $p=\infty$: Chebychev distance
+- **Comparing two sequences**:
+  - Hamming distance: # of indices with different values in two equal-length sequences
+- **Real-world**:
+  - Travel time between destinations
+  - Difference in time to failure
+  - Subjective:
+    - Difference in rated quality
+:::
+
+::: {.column width="50%"}
+### Similarity measures
+
+- **Continuous**:
+  - Centred dot product: $(\mathbf{x}_i - \bar{\mathbf{x}})^\prime (\mathbf{x}_j - \bar{\mathbf{x}})$
+  - Correlation coefficient: Pearson, Spearman, etc.
+- **Binary** (comparing two sets):
+  - Jaccard: $|A \cap B| / |A \cup B|$
+- **Real-world**:
+  - Frequency of signal confusion
+:::
+::::
+
+## Classical scaling
+
+- **Classical scaling** [@torgerson1952multidimensional;@torgerson1958theory] (references inaccessible via UCT) is a variant of metric MDS that finds the optimal low-rank configuration of points such that their centred inner products match those in the original space as closely possible.
+  - It essentially calculates the answer in this direction:
+    - Distances -> centred inner products -> low-rank configuration.
+  - The motivation for this is that the optimisation problem has a known solution based on the eigendecomposition, thus avoiding iterative optimisation (apart from calculating eigen decomposition).
+  - If the distances are Euclidean ($\delta_{ij} = |\mathbf{x}_i - \mathbf{x}_j| = \sqrt{\sum (x_{ik} - x_{jk})^2}$), then the solution matches the principal component solution.
+
+## Procedure for classical scaling: major steps
+
+- We begin with the dissimilarities $\Delta$, and do not have access to the original data matrix $X$.
+  - From $\Delta$, we calculate the matrix $B$ of centred dot products, i.e. where $b_{ij} = \mathbf{x}_i^\prime \mathbf{x}_j$, for $\mathbf{x}_i$ and $\mathbf{x}_j$ the $i$-th and $j$-th rows of $X$.
+  - We find the rank $t$ matrix $B^*$ whose $L_2$ norm from $B$ is smallest.
+  - It essentially calculates the answer in this direction:
+    - Distances -> centred inner products -> low-rank configuration by eigen decomposition.
+  - The motivation for this is that the optimisation problem has a known solution based on the eigen decomposition, thus avoiding iterative optimisation (in theory).
+  - If the distances are Euclidean ($\delta_{ij} = |\mathbf{x}_i - \mathbf{x}_j| = \sqrt{\sum (x_{ik} - x_{jk})^2}$), then the solution matches the principal components applied to the original matrix $X$ – without knowing $X$!
+
+## Obtaining centred inner products from dissimilarities
+
+
+```{r}
+#| results: asis
+#| fig-align: center
+knitr::include_graphics(
+  projr::projr_path_get("data-raw-img", "derivation-dot_from_distance.png")
+)
+```
+
+
+## Objective function for classical scaling
+
+We wish to find $n$ $t$-dimensional points, $\mathbf{Y}_1, . . . ,\mathbf{Y}_n  \in \mathbb{R}^t$ such that
+
+$$tr\{(B - B^*)^2\} = \sum_i \sum_j (b_{ij} - b_{ij}^*)^2,$$
+
+where $B^*$ is the rank $t$ matrix of centred inner products of the points.
+
+- When we use Euclidean distances for proximity matrix, this is equivalent to PCA.
+- From $\mathbf{B}$, the points are given by
+
+$$\mathbf{Y} = \mathbf{V}_t \mathbf{\Lambda}_t^{1/2},$$
+
+where $\mathbf{V}_t$ is the matrix of the first $t$ eigenvectors of $\mathbf{B}$, and $\mathbf{\Lambda}_t$ is the diagonal matrix of the first $t$ eigenvalues of $\mathbf{B}$.
+
+## Example of classical scaling from first principles I
+
+:::: {.columns}
+
+::: {.column width=50%}
+
+- Assume that we have measured distances between four cities, saved as $\mathbf{\Delta}$:
+
+
+```{r}
+#| eval: FALSE
+#| echo: FALSE
+dist_vec <- c(93, 82, 52, 133, 60, 111)
+Delta_mat <- matrix(rep(0, 16), nrow = 4)
+k <- 1
+for (i in 2:4) for (j in seq_len(i-1)) {
+  Delta_mat[i, j] <- dist_vec[[k]]
+  k <- k + 1
+}
+Delta_mat <- Delta_mat + t(Delta_mat)
+dput(Delta_mat)
+```
+
+```{r}
+#| echo: TRUE
+Delta_mat <- structure(c(0, 93, 82, 133, 93, 0, 52, 60, 82, 52, 0, 111, 133, 
+60, 111, 0), dim = c(4L, 4L))
+Delta_mat |> signif(2)
+```
+
+
+:::
+
+::: {.column width=50%}
+
+- Calculate $\mathbf{A}$, where $\mathbf{A}_{ij} =-\frac{1}{2}{\delta}_{ij}^2$:
+
+
+```{r}
+#| echo: TRUE
+# remember, R by default performs element-wise multiplication
+A_mat <- -0.5 * Delta_mat^2
+A_mat |> signif(3)
+```
+
+
+- Calculate $\mathbf{B}=\mathbf{HAH}$, where $\mathbf{H} = \mathbf{I} - \frac{1}{n}\mathbf{1}\mathbf{1}^\prime$:
+
+
+```{r}
+#| echo: TRUE
+H <- diag(4) - 1/4 * matrix(1, 4, 4)
+B_mat <- H %*% A_mat %*% H
+B_mat |> signif(3)
+```
+
+
+:::
+
+::::
+
+## Example of classical scaling from first principles II
+
+
+:::: {.columns}
+
+::: {.column width=50%}
+
+- Calculate the eigenvalues and eigenvectors of $\mathbf{B}$:
+
+
+```{r}
+#| echo: TRUE
+eig_obj <- eigen(B_mat)
+```
+
+
+- Calculate the principal coordinates:
+
+
+```{r}
+#| echo: TRUE
+Y_mat <- eig_obj $ vectors %*% diag(sqrt(eig_obj$values))
+Y_mat |> signif(2)
+```
+
+
+:::
+
+::: {.column width=50%}
+
+- Plot the first two principal coordinates:
+
+
+```{r}
+#| warning: FALSE
+plot_tbl <- Y_mat |>
+ tibble::as_tibble() |>
+  dplyr::mutate(
+    city = c("Kobenhavn", "Arhus", "Odense", "Aalborg")
+  )
+ggplot(plot_tbl, aes(V1, V2)) +
+  geom_point(size = 10) +
+  ggrepel::geom_text_repel(aes(label = city), size = 10) +
+  cowplot::theme_cowplot(font_size = 28)
+```
+
+
+:::
+
+::::
+
+## Classical scaling algorithm
+
+
+```{r}
+#| results: asis
+knitr::include_graphics(
+  projr::projr_path_get(
+    "data-raw-img", "alg-classical_scaling.png"
+  )
+)
+```
+
+
+## Key references
+
+- AJ Izenman, “Modern Multivariate Statistical Techniques”, Ch 13, Springer, 2013.
+- Hastie, Trevor, Robert Tibshirani, and J. H. (Jerome H.) Friedman. “The Elements of Statistical Learning : Data Mining, Inference, and Prediction. 2nd ed. Springer Series in Statistics”, Section 14.8. New York: Springer, 2009.
+
+## Complete references
+
+
