@@ -1,6 +1,6 @@
 Package: Slides24STA5069Z
 Title: Slides for 2024 STA5069Z MSc multivariate statistics course
-Version: 1.0.10
+Version: 1.0.11
 Authors@R: person("Miguel", "Rodo", , "miguel.rodo@uct.ac.za", role = c("aut", "cre"))
 Maintainer: Miguel Rodo <miguel.rodo@uct.ac.za>
 Description: Slides for 2024 STA5069Z MSc multivariate statistics course
