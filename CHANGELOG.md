@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v1.0.12): Miguel Julio Rodo (14:06:49)
+  - Trigger warning
 - Patch (v1.0.11): Miguel Julio Rodo (14:04:37)
   - Trigger warning
 - Patch (v1.0.10): Miguel Julio Rodo (14:01:19)
