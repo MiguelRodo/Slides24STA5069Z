@@ -1,6 +1,6 @@
 directories:
-  data-raw:
-    path: _data_raw
+  data-raw-img:
+    path: _data_raw/img
   cache:
     path: _tmp
   output:
@@ -8,14 +8,6 @@ directories:
   docs:
     path: docs
 build:
-  local:
-    archive:
-      path: _archive
-      content:
-      - data-raw
-      - output
-      - docs
-      structure: version
   github:
     '@version':
       content: code
