@@ -826,7 +826,7 @@
       "RemoteUsername": "SATVILab",
       "RemotePkgRef": "SATVILab/projr",
       "RemoteRef": "HEAD",
-      "RemoteSha": "a7dd072d8e7da92d70b6b73a83479d125f118085",
+      "RemoteSha": "63355320b3e88d799223bd84206110050f9e79a8",
       "Requirements": [
         "desc",
         "digest",
@@ -835,7 +835,7 @@
         "rprojroot",
         "yaml"
       ],
-      "Hash": "11b63d94fe0466c5ebf0ac8db01952ae"
+      "Hash": "2778d050ff6955281e07cde9de0c6bd0"
     },
     "ps": {
       "Package": "ps",
