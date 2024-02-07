@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v1.0.3): Miguel Julio Rodo (13:35:53)
+  - Add changes
 - Patch (v1.0.2): Miguel Julio Rodo (13:32:46)
   - Add partially-complete slides
 - Patch (v1.0.1): Miguel Julio Rodo (13:30:58)
