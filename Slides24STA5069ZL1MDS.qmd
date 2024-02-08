@@ -1,12 +1,21 @@
 ---
 title: Multidimensional scaling (MDS)
-author: Francesca Little (edited by Miguel Rodo)
+subtitle: Visualising distance data
+author: Francesca Little (reformatted and edited by Miguel Rodo)
+date: "2024-02-12"
 bibliography: zotero.bib
 format:
   beamer:
     embed-resources: true
     aspectratio: 169
+    urlcolor: cyan
+    linkcolor: blue
+    filecolor: magenta
+    include-in-header:
+      file: preamble.tex
 ---
+
+
 
 ## Example: representing cities' relative locations by airline distance
 
@@ -28,6 +37,8 @@ renv::install(c(
   "ggplot2", "cowplot", "tibble", "ggrepel", "SATVILab/projr"
 ))
 ```
+
+\addtocounter{framenumber}{-1}
 
 ## Two-dimensional MDS map
 
