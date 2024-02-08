@@ -49,7 +49,6 @@ format:
 **Venue and timing**
 
 - Lectures will be 4-5.45pm on Mondays and Wednesdays in PD Hahn 4.26 (the Quiet Room).
-  - PD Hahn 4.26  is on the left as you enter PD Hahn on the fourth floor.
 
 ## Course structure: practice and testing
 
