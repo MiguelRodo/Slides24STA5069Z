@@ -1,5 +1,8 @@
 # CHANGELOG
 
+- *Minor* (v1.1.0): Miguel Julio Rodo (10:13:03)
+  - Add intro and partial MDS slides
+
 - Patch (v1.0.25): Miguel Julio Rodo (14:38:03)
   - Trigger warning
 - Patch (v1.0.24): Miguel Julio Rodo (14:33:38)
