@@ -15,7 +15,10 @@ format:
       file: preamble.tex
 ---
 
+## Key references
 
+- AJ Izenman, “Modern Multivariate Statistical Techniques”, Ch 13, Springer, 2013.
+- Hastie, Trevor, Robert Tibshirani, and J. H. (Jerome H.) Friedman. “The Elements of Statistical Learning : Data Mining, Inference, and Prediction. 2nd ed. Springer Series in Statistics”, Section 14.8. New York: Springer, 2009.
 
 ## Example: representing cities' relative locations by airline distance
 
@@ -33,9 +36,6 @@ library(ggplot2)
 library(cowplot)
 library(tibble)
 library(ggrepel)
-renv::install(c(
-  "ggplot2", "cowplot", "tibble", "ggrepel", "SATVILab/projr"
-))
 ```
 
 \addtocounter{framenumber}{-1}
@@ -213,11 +213,11 @@ where $B^*$ is the rank $t$ matrix of centred inner products of the points.
 - When we use Euclidean distances for proximity matrix, this is equivalent to PCA.
 - From $\mathbf{B}$, the points are given by
 
-$$\mathbf{Y} = \mathbf{V}_t \mathbf{\Lambda}_t^{1/2},$$
+$$\mathbf{Y} = \mathbf{V}_t \symbf{\Lambda}_t^{1/2},$$
 
-where $\mathbf{V}_t$ is the matrix of the first $t$ eigenvectors of $\mathbf{B}$, and $\mathbf{\Lambda}_t$ is the diagonal matrix of the first $t$ eigenvalues of $\mathbf{B}$.
+where $\mathbf{V}_t$ is the matrix of the first $t$ eigenvectors of $\mathbf{B}$, and $\symbf{\Lambda}_t$ is the diagonal matrix of the first $t$ eigenvalues of $\mathbf{B}$.
 
-## Example of classical scaling from first principles I
+## Example of classical scaling from first principles I {.smaller}
 
 :::: {.columns}
 
@@ -254,10 +254,21 @@ Delta_mat |> signif(2)
 
 ```{r}
 #| echo: TRUE
-# remember, R by default performs element-wise multiplication
+# remember, R by default performs
+# element-wise multiplication
 A_mat <- -0.5 * Delta_mat^2
 A_mat |> signif(3)
 ```
+
+:::
+
+::::
+
+## Example of classical scaling from first principles II {.smaller}
+
+:::: {.columns}
+
+::: {.column width=50%}
 
 - Calculate $\mathbf{B}=\mathbf{HAH}$, where $\mathbf{H} = \mathbf{I} - \frac{1}{n}\mathbf{1}\mathbf{1}^\prime$:
 
@@ -269,13 +280,6 @@ B_mat |> signif(3)
 ```
 
 :::
-
-::::
-
-## Example of classical scaling from first principles II
-
-
-:::: {.columns}
 
 ::: {.column width=50%}
 
@@ -290,27 +294,60 @@ eig_obj <- eigen(B_mat)
 
 ```{r}
 #| echo: TRUE
-Y_mat <- eig_obj $ vectors %*% diag(sqrt(eig_obj$values))
+Y_mat <- eig_obj$vectors %*% diag(sqrt(eig_obj$values))
 Y_mat |> signif(2)
 ```
 
 :::
+
+::::
+
+## Example of classical scaling from first principles III {.smaller}
+
+:::: {.columns}
 
 ::: {.column width=50%}
 
 - Plot the first two principal coordinates:
 
 ```{r}
-#| warning: FALSE
+#| warning: false
+#| echo: true
 plot_tbl <- Y_mat |>
  tibble::as_tibble() |>
   dplyr::mutate(
-    city = c("Kobenhavn", "Arhus", "Odense", "Aalborg")
+    city = c(
+      "Kobenhavn", "Arhus",
+      "Odense", "Aalborg"
+      )
   )
-ggplot(plot_tbl, aes(V1, V2)) +
-  geom_point(size = 10) +
-  ggrepel::geom_text_repel(aes(label = city), size = 10) +
-  cowplot::theme_cowplot(font_size = 28)
+p <- ggplot(plot_tbl, aes(V1, V2)) +
+  geom_point(size = 3) +
+  ggrepel::geom_text_repel(
+    aes(label = city), size = 10)
+```
+
+```{r}
+#| echo: false
+p <- p +
+  cowplot::theme_cowplot(
+    font_size = 28
+    ) +
+  labs(
+    x = "First principal coordinate",
+    y = "Second principal coordinate",
+    title = "Classical scaling of Danish coordinates"
+  )
+```
+
+:::
+
+::: {.column width=50%}
+
+\vspace{1cm}
+
+```{r}
+p
 ```
 
 :::
@@ -319,19 +356,165 @@ ggplot(plot_tbl, aes(V1, V2)) +
 
 ## Classical scaling algorithm
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{_data_raw/img/alg-classical_scaling.png}
+\end{figure}
+
+## Another classical scaling example: distances between SA cities I
+
+First we load our data from the `DataTidy24STA5069Z` package, installing it if it's not available:
+
 ```{r}
-#| results: asis
-knitr::include_graphics(
-  projr::projr_path_get(
-    "data-raw-img", "alg-classical_scaling.png"
-  )
-)
+#| echo: true
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+if (!requireNamespace("DataTidy24STA5069Z", quietly = TRUE)) {
+  remotes::install_github("MiguelRodo/DataTidy24STA5069Z")
+}
+data("data_tidy_sa_distance", package = "DataTidy24STA5069Z")
 ```
 
-## Key references
+## Another example of classical scaling from first principles I {.smaller}
 
-- AJ Izenman, “Modern Multivariate Statistical Techniques”, Ch 13, Springer, 2013.
-- Hastie, Trevor, Robert Tibshirani, and J. H. (Jerome H.) Friedman. “The Elements of Statistical Learning : Data Mining, Inference, and Prediction. 2nd ed. Springer Series in Statistics”, Section 14.8. New York: Springer, 2009.
+:::: {.columns}
+
+::: {.column width=50%}
+
+- Save proximity data as the matrix $\mathbf{\Delta}$:
+
+```{r}
+#| echo: TRUE
+Delta_mat <- as.matrix(
+  data_tidy_sa_distance
+  ) / 1e3
+Delta_mat[1:3, 1:3] |> signif(2)
+```
+
+:::
+
+::: {.column width=50%}
+
+- Calculate $\mathbf{A}$, where $\mathbf{A}_{ij} =-\frac{1}{2}{\delta}_{ij}^2$:
+
+```{r}
+#| echo: TRUE
+# remember, R by default performs
+# element-wise multiplication
+A_mat <- -0.5 * Delta_mat^2
+A_mat[1:3, 1:3] |> signif(3)
+```
+
+:::
+
+::::
+
+## Another example of classical scaling from first principles II {.smaller}
+
+:::: {.columns}
+
+::: {.column width=50%}
+
+- Calculate $\mathbf{B}=\mathbf{HAH}$, where $\mathbf{H} = \mathbf{I} - \frac{1}{n}\mathbf{1}\mathbf{1}^\prime$:
+
+```{r}
+#| echo: TRUE
+H <- diag(nrow(A_mat)) -
+  1/nrow(A_mat) *
+  matrix(1, nrow(A_mat), nrow(A_mat))
+B_mat <- H %*% A_mat %*% H
+B_mat[1:3, 1:3] |> signif(3)
+```
+
+:::
+
+::: {.column width=50%}
+
+- Calculate the eigenvalues and eigenvectors of $\mathbf{B}$:
+
+```{r}
+#| echo: TRUE
+eig_obj <- eigen(B_mat)
+```
+
+- Calculate the principal coordinates:
+
+```{r}
+#| echo: TRUE
+Y_mat <- eig_obj$vectors %*%
+  diag(sqrt(eig_obj$values))
+Y_mat[1:3, 1:2] |> signif(2)
+```
+
+:::
+
+::::
+
+## Another example of classical scaling from first principles III {.smaller}
+
+:::: {.columns}
+
+::: {.column width=50%}
+
+- Plot the first two principal coordinates:
+
+```{r}
+#| warning: false
+#| echo: true
+plot_tbl <- Y_mat |>
+ tibble::as_tibble() |>
+  dplyr::mutate(
+    city = data_tidy_sa_distance |>
+      colnames()
+  )
+p <- ggplot(plot_tbl, aes(V1, V2)) +
+  geom_point(size = 3) +
+  ggrepel::geom_text_repel(
+    aes(label = city), size = 10)
+```
+
+```{r}
+#| echo: false
+p <- p +
+  cowplot::theme_cowplot(
+    font_size = 28
+    ) +
+  labs(
+    x = "First principal coordinate",
+    y = "Second principal coordinate",
+    title = "Classical scaling of SA Cities"
+  )
+```
+
+:::
+
+::: {.column width=50%}
+
+\vspace{1cm}
+
+```{r}
+p
+```
+
+:::
+
+::::
+
+## Classical scaling versus least-squares scaling
+
+- *Values approximated*:
+  - In classical scaling, we approximate centred inner products.
+  - In least-squares scaling, we approximate distances directly.
+  - Even when the distances are Euclidean, the two methods will not give the same answer [@hastie_etal09].
+    - For one thing, note that the centred inner products are related to the squared distances.
+- *Flexibility*:
+  - Least-squares scaling is more flexible, in that:
+    - It can handle non-Euclidean distances (without "breaking" an assumption).
+    - It can handle transformed distances (including merely using ranks).
+    - We can weight errors in distance approximations differently (e.g. downeight errors of large original distances).
+- *Optimisation approach*:
+  - Unlike classical scaling, least-squares scaling does not have a known solution based on the eigen decomposition, and so requires iterative optimisation.
 
 ## Complete references
 
