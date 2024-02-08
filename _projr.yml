@@ -10,7 +10,7 @@ directories:
 build:
   github:
     input:
-      content: data-raw
+      content: data-raw-img
       description: Project inputs
     output:
       content:
