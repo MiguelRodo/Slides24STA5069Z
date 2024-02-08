@@ -1,5 +1,8 @@
 # CHANGELOG
 
+- *Minor* (v1.3.0): Miguel Julio Rodo (10:14:53)
+  - Add introa nd MDS slides
+
 - *Minor* (v1.2.0): Miguel Julio Rodo (10:14:04)
   - Add intro and MDS slides
 
