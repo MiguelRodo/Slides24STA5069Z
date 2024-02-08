@@ -24,6 +24,8 @@ format:
   - Mr Miguel Rodo (PD Hahn 5.52)
   - Dr Sebnem Er (PD Hahn 5.55)
 
+\addtocounter{framenumber}{-1}
+
 ## Key references
 
 - Primary: @izenman08

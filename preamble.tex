@@ -22,8 +22,12 @@
 \setbeamertemplate{itemize subitem}{\raisebox{1pt}{\scalebox{0.5}{$\blacktriangleright$}}}
 \setbeamertemplate{itemize subsubitem}{\raisebox{1pt}{\scalebox{0.4}{$\blacktriangleright$}}}
 
-% Adding page numbers to the footline
-\setbeamertemplate{footline}{%
-    \hfill\insertframenumber/\inserttotalframenumber\hspace*{1em}\vspace*{1em}
+% Suppressing the footline on the title slide
+\setbeamertemplate{footline}{
+    \ifnum\insertpagenumber=1
+    \else
+        \hfill\insertframenumber/\inserttotalframenumber\hspace*{1em}\vspace*{1em}
+    \fi
 }
 
+% Must 
