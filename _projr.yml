@@ -8,13 +8,5 @@ directories:
   docs:
     path: docs
 build:
-  github:
-    input:
-      content: data-raw-img
-      description: Project inputs
-    output:
-      content:
-      - output
-      - docs
-      description: Project outputs
+  git: yes
 

@@ -4,8 +4,6 @@ subtitle: Visualising dissimilarity data
 author: Francesca Little (reformatted and edited by Miguel Rodo)
 date: "2024-02-12"
 bibliography: zotero.bib
-nocite: |
-  @harrell15, @izenman08
 format:
   beamer:
     embed-resources: true
@@ -17,12 +15,13 @@ format:
       file: preamble.tex
 ---
 
-## Key references
+# Key references
 
 - AJ Izenman, “Modern Multivariate Statistical Techniques”, Ch 13, Springer, 2013.
+  - Much content without citation is based on this book, so give them full credit for uncited (correct!) content.
 - Hastie, Trevor, Robert Tibshirani, and J. H. (Jerome H.) Friedman. “The Elements of Statistical Learning : Data Mining, Inference, and Prediction. 2nd ed. Springer Series in Statistics”, Section 14.8. New York: Springer, 2009.
 
-## Example: representing cities' relative locations by airline distance
+# Example: representing cities' relative locations by airline distance
 
 ```{r}
 #| results: asis
@@ -42,14 +41,14 @@ library(ggrepel)
 
 \addtocounter{framenumber}{-1}
 
-## Two-dimensional MDS map
+# Two-dimensional MDS map
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.6\textwidth]{_data_raw/img/airline_mds.png}
 \end{figure}
 
-## What is MDS?
+# What is MDS?
 
 - Goal:
   - Represent dissimilarity-data in a low-dimensional space, typically for visualization.
@@ -63,13 +62,14 @@ library(ggrepel)
 
 - MDS is a family of techniques, differing by:
   - Valid interpretations of dissimilarities between points in generated map (ratio, interval or rank)
-  - Optimisation function
+  - Objective function
+    - Difference measure
+    - Weights of per-dissimilarity errors
   - Method of optimisation (eigen-decomposition vs numerical)
-  - Weights of per-dissimilarity errors
 
-## Scales of measurement
+# Scales of measurement
 
-- Stevens (1946) proposed four scales of measurement:
+- @1946Stevens proposed four scales of measurement:
   - Ratio: a natural zero exists, meaning ratios can be meaningfully defined.
     - Example: height.
     - Non-example: temperature.
@@ -82,7 +82,7 @@ library(ggrepel)
   - Nominal: no greater than/less than relationship between points.
     - Example: people’s names.
 
-## Categories of MDS techniques
+# Categories of MDS techniques
 
 - Metric:
   - Aim to represent actual dissimilarities.
@@ -92,15 +92,15 @@ library(ggrepel)
     - Least-squares scaling
 - Non-metric:
   - Aim to preserve ranks.
-  - dissimilarities only interpretable in an ordinal sense.
+  - Dissimilarities only interpretable in an ordinal sense.
 
-## Input data
+# Input data
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 
-### Similarity/dissimilarity measure 
+## Similarity/dissimilarity measure 
 
 - *Purpose*:
   - Captures differences between two observations
@@ -114,7 +114,7 @@ library(ggrepel)
 :::
 
 ::: {.column width="50%"}
-### Proximity matrix
+## Proximity matrix
 
 - *Nature*:
   - Matrix whose $i$-th, $j$-th element is $\delta_{ij}$
@@ -125,14 +125,13 @@ library(ggrepel)
   - Typically, either non-negative or non-positive
 - *Notation*:
   - Proximity matrix: $\Delta = (\delta_{ij})$
-  - Number of lower off-diagonal elements: $m$
-  - $m = \left\lfloor \frac{n}{2} \right\rfloor = \frac{1}{2} n(n-1)$
-  - Excludes duplicates (taking only one of $\delta_{ij}$ and $\delta_{ji}$) and diagonal elements ($\delta_{ii}$)
+  - Number of lower off-diagonal elements: $m$, where $m = \left( \frac{n}{2} \right) = \frac{1}{2} n(n-1)$
+    - Excludes duplicate and diagonal elements
 :::
 
 ::::
 
-## Example proximity matrix: dissimilarities between SA cities
+# Example proximity matrix: dissimilarities between SA cities
 
 ```{r}
 #| results: asis
@@ -142,12 +141,12 @@ knitr::include_graphics(
 )
 ```
 
-## Common (dis)similarity measures
+# Common (dis)similarity measures
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-### Dissimilarity measures
+## Dissimilarity measures
 
 - **Minkowski distance**:
   - $\delta_{ij} = \left( \sum_{k=1}^{r} |X_{ik} - X_{jk}|^{p} \right)^{1/p}$
@@ -164,19 +163,20 @@ knitr::include_graphics(
 :::
 
 ::: {.column width="50%"}
-### Similarity measures
+## Similarity measures
 
 - **Continuous**:
   - Centred dot product: $(\mathbf{x}_i - \bar{\mathbf{x}})^\prime (\mathbf{x}_j - \bar{\mathbf{x}})$
   - Correlation coefficient: Pearson, Spearman, etc.
 - **Binary** (comparing two sets):
-  - Jaccard: $|A \cap B| / |A \cup B|$
+  - Jaccard [@1573387450552842240]: $|A \cap B| / |A \cup B|$
+  - See @choi_etal for many (many, many) more
 - **Real-world**:
   - Frequency of signal confusion
 :::
 ::::
 
-## Classical scaling
+# Classical scaling
 
 - **Classical scaling** [@torgerson1952multidimensional;@torgerson1958theory] (references inaccessible via UCT) is a variant of metric MDS that finds the optimal low-rank configuration of points such that their centred inner products match those in the original space as closely possible.
   - It essentially calculates the answer in this direction:
@@ -184,17 +184,14 @@ knitr::include_graphics(
   - The motivation for this is that the optimisation problem has a known solution based on the eigendecomposition, thus avoiding iterative optimisation (apart from calculating eigen decomposition).
   - If the dissimilarities are Euclidean ($\delta_{ij} = |\mathbf{x}_i - \mathbf{x}_j| = \sqrt{\sum (x_{ik} - x_{jk})^2}$), then the solution matches the principal component solution.
 
-## Procedure for classical scaling: major steps
+# Procedure for classical scaling: major steps
 
-- We begin with the dissimilarities $\Delta$, and do not have access to the original data matrix $X$.
-  - From $\Delta$, we calculate the matrix $B$ of centred dot products, i.e. where $b_{ij} = \mathbf{x}_i^\prime \mathbf{x}_j$, for $\mathbf{x}_i$ and $\mathbf{x}_j$ the $i$-th and $j$-th rows of $X$.
-  - We find the rank $t$ matrix $B^*$ whose $L_2$ norm from $B$ is smallest.
-  - It essentially calculates the answer in this direction:
-    - dissimilarities -> centred inner products -> low-rank configuration by eigen decomposition.
-  - The motivation for this is that the optimisation problem has a known solution based on the eigen decomposition, thus avoiding iterative optimisation (in theory).
-  - If the dissimilarities are Euclidean ($\delta_{ij} = |\mathbf{x}_i - \mathbf{x}_j| = \sqrt{\sum (x_{ik} - x_{jk})^2}$), then the solution matches the principal components applied to the original matrix $X$ – without knowing $X$!
+1. We begin with the dissimilarities $\Delta$, and do not have access to the original data matrix $X$.
+1. From $\Delta$, we calculate the matrix $B$ of centred dot products, i.e. where $b_{ij} = \mathbf{x}_i^\prime \mathbf{x}_j$, for $\mathbf{x}_i$ and $\mathbf{x}_j$ the $i$-th and $j$-th rows of $X$.
+1. We find the rank $t$ matrix $B^*$ whose $L_2$ norm from $B$ is smallest.
+1. The minimsing configuration is a function of the SVD of $\mathbf{B}$.
 
-## Obtaining centred inner products from dissimilarities
+# Obtaining centred inner products from dissimilarities
 
 ```{r}
 #| results: asis
@@ -204,7 +201,7 @@ knitr::include_graphics(
 )
 ```
 
-## Objective function for classical scaling
+# Objective function for classical scaling
 
 We wish to find $n$ $t$-dimensional points, $\mathbf{Y}_1, . . . ,\mathbf{Y}_n  \in \mathbb{R}^t$ such that
 
@@ -219,7 +216,7 @@ $$\mathbf{Y} = \mathbf{V}_t \symbf{\Lambda}_t^{1/2},$$
 
 where $\mathbf{V}_t$ is the matrix of the first $t$ eigenvectors of $\mathbf{B}$, and $\symbf{\Lambda}_t$ is the diagonal matrix of the first $t$ eigenvalues of $\mathbf{B}$.
 
-## Example of classical scaling from first principles I {.smaller}
+# Example of classical scaling from first principles I {.smaller}
 
 :::: {.columns}
 
@@ -266,7 +263,7 @@ A_mat |> signif(3)
 
 ::::
 
-## Example of classical scaling from first principles II {.smaller}
+# Example of classical scaling from first principles II {.smaller}
 
 :::: {.columns}
 
@@ -304,7 +301,7 @@ Y_mat |> signif(2)
 
 ::::
 
-## Example of classical scaling from first principles III {.smaller}
+# Example of classical scaling from first principles III {.smaller}
 
 :::: {.columns}
 
@@ -326,7 +323,9 @@ plot_tbl <- Y_mat |>
 p <- ggplot(plot_tbl, aes(V1, V2)) +
   geom_point(size = 3) +
   ggrepel::geom_text_repel(
-    aes(label = city), size = 10)
+    aes(label = city), size = 10
+    ) +
+  coord_equal()
 ```
 
 ```{r}
@@ -356,14 +355,14 @@ p
 
 ::::
 
-## Classical scaling algorithm
+# Classical scaling algorithm
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.55\textwidth]{_data_raw/img/alg-classical_scaling.png}
 \end{figure}
 
-## Another classical scaling example: dissimilarities between SA cities I
+# Another classical scaling example: dissimilarities between SA cities I
 
 First we load our data from the `DataTidy24STA5069Z` package, installing it if it's not available:
 
@@ -378,7 +377,7 @@ if (!requireNamespace("DataTidy24STA5069Z", quietly = TRUE)) {
 data("data_tidy_sa_distance", package = "DataTidy24STA5069Z")
 ```
 
-## Another example of classical scaling from first principles I {.smaller}
+# Another example of classical scaling from first principles I {.smaller}
 
 :::: {.columns}
 
@@ -412,7 +411,7 @@ A_mat[1:3, 1:3] |> signif(3)
 
 ::::
 
-## Another example of classical scaling from first principles II {.smaller}
+# Another example of classical scaling from first principles II {.smaller}
 
 :::: {.columns}
 
@@ -453,7 +452,7 @@ Y_mat[1:3, 1:2] |> signif(2)
 
 ::::
 
-## Another example of classical scaling from first principles III {.smaller}
+# Another example of classical scaling from first principles III {.smaller}
 
 :::: {.columns}
 
@@ -473,7 +472,8 @@ plot_tbl <- Y_mat |>
 p <- ggplot(plot_tbl, aes(V1, V2)) +
   geom_point(size = 3) +
   ggrepel::geom_text_repel(
-    aes(label = city), size = 10)
+    aes(label = city), size = 10) +
+  coord_equal()
 ```
 
 ```{r}
@@ -503,19 +503,21 @@ p
 
 ::::
 
-## Least-squares scaling
+# Least-squares scaling
 
 For a matrix of dissimilarities $\symbf{\Delta}=(\delta_{ij})$, a matrix of weights $\mathbf{W}=(w_{ij})$ and a monotonic function $f$, the least-squares scaling algorithm minimises the objective function
 
 $$
-\mathcal{L}_f(\mathbf{Y}_1, \mathbf{Y}_2, \ldots, \mathbf{Y}_n; \mathbf{W}) = \sum_{i<j}^{n} w_{ij}(d_{ij} - f(\delta_{ij}))^2.
+\mathcal{L}_f(\mathbf{Y}_1, \mathbf{Y}_2, \ldots, \mathbf{Y}_n; \mathbf{W}; f) = \sum_{i<j}^{n} w_{ij}(d_{ij} - f(\delta_{ij}))^2.
 $$
 
-with respect to the $n$ $t$-dimensional points $\mathbf{y}_1, . . . ,\mathbf{y}_n  \in \mathbb{R}^t$, where $d_{ij} = \|\mathbf{y}_i - \mathbf{y}_j\|$ for $\|\cdot \|$ the Euclidean norm.
+with respect to the $n$ $t$-dimensional points $\mathbf{y}_1, . . . ,\mathbf{y}_n$, where $d_{ij} = \|\mathbf{y}_i - \mathbf{y}_j\|$ for $\|\cdot \|$ the Euclidean norm.
 
-- The square root of $\mathcal{L}_f$ may be referred to as the metric stress function, when $f$ does not merely preserve ranks.
+- The initial version of the objective function was proposed by @kruskal64 and lacked weights, which was extended to include weights by [@deleeuw05] (originally published in 1977). Full history in @groenen_borg.
 
-## Classical scaling versus least-squares scaling
+- The square root of $\mathcal{L}_f$ is typically referred to as the stress function. If $f$ does not merely preserve ranks, then it is the metric stress function.
+
+# Classical scaling versus least-squares scaling
 
 - *Values approximated*:
   - In classical scaling, we approximate centred inner products.
@@ -523,15 +525,21 @@ with respect to the $n$ $t$-dimensional points $\mathbf{y}_1, . . . ,\mathbf{y}_
   - Even when the dissimilarities are Euclidean distances, the two methods will not give the same answer [@hastie_etal09].
     - For one thing, note that the centred inner products (as used by classical scaling) are a function of the squared dissimilarities.
     - For another, the mapping in least-squares scaling need not be linear.
+
+\pause
+
 - *Flexibility*:
   - Least-squares scaling is more flexible, in that:
     - It can handle non-Euclidean distance dissimilarities (without "breaking" an assumption).
     - It can handle transformed dissimilarities (including merely using ranks).
     - We can weight errors in dissimilarity approximations differently (e.g. downeight errors of large original dissimilarities).
-- *Optimisation approach*:
-  - Unlike classical scaling, least-squares scaling does not have a known solution based on the eigen decomposition, and so requires iterative optimisation.
 
-## Transformations of original dissimilarites
+\pause
+
+- *Optimisation approach*:
+  - Least-squares scaling an algebratic solution and so requires numerication optimisation.
+
+# Transformations of original dissimilarites
 
 - In least-squares scaling, we may approximate not merely the dissimilarities themselves, but monotonic transformations of them, i.e. approximate $f(\delta_{ij})$ rather than $\delta_{ij}$.
 - Choices for $f$:
@@ -542,26 +550,27 @@ with respect to the $n$ $t$-dimensional points $\mathbf{y}_1, . . . ,\mathbf{y}_
   - Monotonic rank-preserving transformations. Here, we lose even the interval scale, but are less sensitive to outliers.
     - When we use this transformation, we are effectively performing non-metric MDS. It is non-metric in the sense that you are not preserving the actual dissimilarities, but only the ranks of the dissimilarities.
 
-## Choices of weights
+# Choices of weights
 
 - Two common choices are:
   - Constant weights: $w_{ij} = 1/\sum_{i<j}\delta_{ij}^2$.
     - May help avoid computational precision errors.
+    - If estimating $f$ during the optimisation procedure (e.g. $\hat{f}=\hat{\alpha} + \hat{\beta}\delta_{ij}$), then one should rather substitute $d_{ij}$ or $\hat{f}(\delta_{ij}$) for $\delta_{ij}$ as otherwise each configuration point $\mathbf{y}_i$ may be the same point.
   - Down-weight larger original distances: $w_{ij} = 1/(\delta_{ij}\sum_{i<j}\delta_{ij})$.
     - This may be useful when we have a few very large dissimilarities that we wish to down-weight.
-    - This produces a Sammon mapping.
+    - This produces a Sammon mapping [@sammon69].
 - Other variatons are possible as well.
 
-## Metric least-squares optimisation algorithm
+# Metric least-squares optimisation algorithm
 
 A configuration of points minimising the metric stress function may be obtained as follows:
 
 1. Assign points to initial coordinates (may be arbitrary, or that produced by classical scaling).
 2. Repeat the following until convergence:
   - Compute $d_{ij}$ for all $i$ and $j$ (i.e. the Euclidean distance between all pairs of points).
-  - Move points in the direction that minimises stress.
+  - Move points in the direction that minimises stress across several random restarts.
 
-## Example of metric MDS: kinship grouping
+# Example of metric MDS: kinship grouping
 
 :::: {.columns}
 
@@ -602,7 +611,7 @@ kinshipscales[1:4, ]
 
 ::::
 
-## Example of metric MDS: kinship grouping
+# Example of metric MDS: kinship grouping
 
 The `kinshipdelta` data shows percentages of how often each of fifteen kinship terms were not grouped together by college students:
 
@@ -611,7 +620,7 @@ The `kinshipdelta` data shows percentages of how often each of fifteen kinship t
 kinshipdelta[1:6, 1:6]
 ```
 
-## Metric MDS from first principles I
+# Metric MDS from first principles I
 
 - First, we write the stress function:
 
@@ -641,7 +650,7 @@ optim_obj <- optim(y_vec, calc_stress, delta_mat = kinshipdelta)
 Y_mat <- matrix(optim_obj$par, ncol = 2)
 ```
 
-## Metric MDS from first principles II
+# Metric MDS from first principles II
 
 :::: {.columns}
 
@@ -653,7 +662,7 @@ Y_mat <- matrix(optim_obj$par, ncol = 2)
 #| warning: false
 #| echo: true
 plot_tbl <- Y_mat |>
- tibble::as_tibble() |>
+  tibble::as_tibble() |>
   dplyr::mutate(
     familial_term = kinshipdelta |>
       colnames()
@@ -663,7 +672,8 @@ p <- ggplot(plot_tbl, aes(V1, V2)) +
   ggrepel::geom_text_repel(
     aes(label = familial_term),
     size = 10
-  )
+  ) +
+  coord_equal()
 ```
 
 ```{r}
@@ -674,8 +684,8 @@ p <- p +
     ) +
   labs(
     x = "First dimension",
-    y = "Second dimesnio",
-    title = "Metric MDS representation of kinship"
+    y = "Second dimension",
+    title = "Kinship MDS"
   )
 ```
 
@@ -693,7 +703,7 @@ p
 
 ::::
 
-## Morse code example I
+# Morse code example I
 
 - Morse code consists of 36 sequences of "dots" and "dashes", representing the 26 letters of the alphabet and the digits 0 – 9:
 
@@ -702,7 +712,7 @@ p
 \includegraphics[width=0.6\textwidth]{_data_raw/img/morse_code_dots.png}
 \end{figure}
 
-## Morse code example II
+# Morse code example II
 
 - Participants with no knowledge of Morse code were asked to state whether two subsequent Morse code signals were the same or different.
   - Each pair of signals was presented in both orders possible.
@@ -710,7 +720,7 @@ p
   - For each ordering of each pair, the average number of "different" calls across all participants was calculated.
   - Thus, 1260 dissimilarities were generated, where $\delta_{ij}\neq \delta_{ji}$ and $\delta_{ii}\neq 0$.
 
-## Morse code example III
+# Morse code example III
 
 Here is the original dissimilarity matrix:
 
@@ -720,7 +730,7 @@ data("data_tidy_morse", package = "DataTidy24STA5069Z")
 data_tidy_morse[1:8, 1:8]
 ```
 
-## Morse code example IV
+# Morse code example IV
 
 Here is code to plot of the original dissimilarity matrix:
 
@@ -737,7 +747,7 @@ cn_vec <- substr(cn_vec, nchar(cn_vec), nchar(cn_vec))
 text(1:36, 1:36, cn_vec)
 ```
 
-## Morse code example V
+# Morse code example V
 
 Here is the actual plot of the original dissimilarity matrix:
 
@@ -769,7 +779,7 @@ dev.off()
 \includegraphics[width=0.5\textwidth]{_tmp/img/morse_confusion.png}
 \end{figure}
 
-## Generating symmetric dissimilarities
+# Generating symmetric dissimilarities
 
 - To create symmetric, "hollow" proximities, the following transformation was used:
 
@@ -788,7 +798,7 @@ morse_mat_tilde <-   row_mat + t(row_mat) - morse_mat - t(morse_mat)
 morse_mat_tilde[1:3, 1:3]
 ```
 
-## Applying smacof using the `mds` function
+# Applying smacof using the `mds` function
 
 -  We can apply the `mds` function from the `smacof` package to the Morse code dissimilarities:
 
@@ -802,36 +812,38 @@ mds_obj <- smacof::mds(
 )
 ```
 
-## Extracting results from the `mds` fit
+# Extracting results from the `mds` fit
 
 - Extract the coordinates:
 
 ```{r}
+#| echo: true
 mds_obj[["conf"]][1:5, ]
 ```
 
 - Per-point contribution to total stress:
 
 ```{r}
+#| echo: true
 mds_obj[["spp"]][1:5]
 ```
 
-## Plot of Morse code MDS
+# Plot of Morse code MDS
 
 - With 1s and 2s denoting dots and dashes respectively, and colour signal length:
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.6\textwidth]{_data_raw/img/morse_code_mds.png}
+\includegraphics[width=0.5\textwidth]{_data_raw/img/morse_code_mds.png}
 \end{figure}
 
-## Randomness in results
+# Randomness in results
 
 - MDS will be sensitive to the initial configuration.
   - Even if the plots are similar in terms of inter-point proximity, their orientation may be different - especially if using a random initialisation.
 - At a minimum, set the seed. One can also choose the configuration that minimises stress.
 
-## Sammon mapping
+# Sammon mapping
 
 - In Sammon mapping, we downweight larger original distances ($w_{ij}=1/(\delta_{ij}\sum_{i<j}\delta_{ij})$) and use the identity function.
 - One can use the `MASS::sammon` function to perform this:
@@ -854,7 +866,7 @@ data("data_tidy_sa_distance", package = "DataTidy24STA5069Z")
 sammon_obj <- MASS::sammon(data_tidy_sa_distance |> as.matrix())
 ```
 
-## Sammon mapping of SA cities
+# Sammon mapping of SA cities
 
 :::: {.columns}
 
@@ -875,7 +887,8 @@ p <- ggplot(plot_tbl, aes(V1, V2)) +
   geom_point(size = 3) +
   ggrepel::geom_text_repel(
     aes(label = city), size = 10
-  )
+  ) +
+  coord_equal()
 ```
 
 ```{r}
@@ -905,7 +918,7 @@ p
 
 ::::
 
-## Non-metric MDS
+# Non-metric MDS
 
 - In non-metric MDS, we do not preserve the actual dissimilarities, but only the ranks of the dissimilarities.
 
@@ -933,7 +946,7 @@ called "disparities".
 
 - ${\hat{d}_{ij}}$ are fitted values obtained from fitting a monotonically increasing function to the ${d_{ij}}$.
 
-## Non-metric MDS
+# Non-metric MDS
 
 - Non-metric MDS aims not to approximate the actual dissimilarities, but merely preserve the ranks of the dissimilarities.
 
@@ -945,7 +958,7 @@ called "disparities".
     - Fit a monotonically-increasing function of configuration distances against the ranks of the dissimilarities.
     - Adjust the configuration distances to more closely match the fitted values.
 
-## Shepard's diagram I
+# Shepard's diagram I
 
 - We plot the configuration distances for each pair of points against the rank of their dissimilaritie:
 
@@ -998,10 +1011,10 @@ cowplot::save_plot(
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{_tmp/img/monotonic_example_1.png}
+\includegraphics[width=0.8\textwidth]{_tmp/img/monotonic_example_1.png}
 \end{figure}
 
-## Shepard's diagram II
+# Shepard's diagram II
 
 - We fit a monotonically increasing function to the configuration distances against the ranks of the dissimilarities (in this case, simply linear):
 
@@ -1021,9 +1034,9 @@ cowplot::save_plot(
 \includegraphics[width=0.8\textwidth]{_tmp/img/monotonic_example_1.png}
 \end{figure}
 
-## Shepard's diagram III
+# Shepard's diagram III
 
-- For each rank, the fitted value is denoted $\hat{d}_{i_kj_k}$ and termed the *disparities*:
+- For each rank $k$, the fitted value is denoted $\hat{d}_{i_kj_k}$ and termed the *disparity*:
 
 ```{r}
 #| include: false
@@ -1042,7 +1055,7 @@ p_3 <- p +
     inherit.aes = FALSE,
     data = plot_tbl_fit,
     mapping = aes(x = x, y = fit, fill = val),
-    shape = 24, size = 3, col = "black", stroke = 1
+    shape = 24, size = 2.2, col = "black", stroke = 1
   ) +
   scale_fill_manual(
     values = c("Monotonic" = "green", "Jagged" = "red", "Almost monotonic" = "orange"),
@@ -1060,7 +1073,7 @@ cowplot::save_plot(
 \includegraphics[width=0.8\textwidth]{_tmp/img/monotonic_example_3.png}
 \end{figure}
 
-## Computing goodness of fit
+# Computing goodness of fit
 
 - For a given configuration, the goodness of fit is given by the stress function:
 
@@ -1070,7 +1083,7 @@ $$
 
 - The stress function is a measure of the monotonicity (in the original ranks) of the configuration distances.
 
-## Methods for calculating disparities
+# Methods for calculating disparities
 
 - The basis of the stress function is the disparity.
 - For a given configuration, there exist two common approaches for calculating a monotinically-increasing function of the configuration distances:
@@ -1078,7 +1091,7 @@ $$
   - Monotonic splines
 - Isotonic regression is simpler conceptually, but is not smooth.
 
-## Isotonic regression algorithm
+# Isotonic regression algorithm
 
 - Set $\hat{d}_{i_1j_1}=d_{i_1j_1}$.
   - Initially, set the lowest-rank disparity equal to the lowest-rank configuration distance.
@@ -1092,7 +1105,7 @@ $$
     - Set $\hat{d}_{i_lj_l} = \bar{d}_{i_kj_k}$ for $l \in \{v, v+1, ..., k\}$.
     - In other words, we force the disparities to not increase from $v$ to $k$ by setting them all to the average of the disparities from $v$ to $k$.
 
-## Isotonic regression example
+# Isotonic regression example
 
 - Suppose that the ordered configuration distances are $\{2, 1, 1, 4, 2\}$.
 - The first disparity is simply $2$.
@@ -1102,14 +1115,14 @@ $$
 - The fifth disparity is 2, which is less than 4. So we set the fourth and fifth disparities to $\frac{4+2}{2}=3$.
 - The final disparitiies are then $\{1.33, 1.33, 1.33, 3, 3\}$.
 
-## Another isotonic regression example  (Izenmann, 2008)
+# Another isotonic regression example  (Izenmann, 2008)
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{_data_raw/img/isotonic_reg_example.png}
 \end{figure}
 
-## Splines
+# Splines
 
 :::: {.columns}
 
@@ -1138,26 +1151,41 @@ $$
 
 ::::
 
-## Monotonic splines
+# Monotonic splines
 
 - Monotonic splines are splines that are made to be monotonically increasing. 
 - This is achieved by using a truncated power basis (see @harrell15 for details) and fitting non-linear weights (see uploaded spline section of of @izenman08 for details).
 - By comparison with isotonic regression regression (left), monotonic splines may be far smoother (right) [@izenman08]:
 
-## Variations on the stress function
+# Variations on the stress function
 
 - Raw stress: unweighted $\rightarrow S = \sum_{i<j}(d_{ij} - \hat{d_{ij}})^2$.
 - Kruskal's stress formula (Stress-1): $w_{ij}=(\sum_{i<j}d_{ij}^2)^{-1} \rightarrow S = \left[\frac{\sum_{i<j} (d_{ij} - \hat{d}_{ij})^2}{\sum_{i<j}(d_{ij})^2}\right]^{1/2}$.
 - Stress-2: $w_{ij}=(\sum_{i<j}(d_{ij}-\bar{d})^2)^{-1} \rightarrow S = \left[\frac{\sum_{i<j} (d_{ij} - \hat{d}_{ij})^2}{\sum_{i<j}(d_{ij}-\bar{d})^2}\right]^{1/2}$.
 - Sammon's stress: $w_{ij}=1/(\hat{d}_{ij}\sum_{i<j}\hat{d}_{ij}) \rightarrow S = \left[\frac{\sum_{i<j} (d_{ij} - \hat{d}_{ij})^2/\hat{d}_{ij}}{\sum_{i<j}\hat{d}_{ij}}\right]^{1/2}$.
 
-## Algorithm for non-metric MDS
+# Minimising the stress function
+
+- @kruskal64 proposed a gradient descent procedure, but other numerical optimsation functions, such as those in the `optim` function in `R`, may be used.
+- A popular, alternative method is minimisation by majorisation, as first applied to MDS by @deleeuw05. It is apparently faster [@izenman08], and necessarily converges to the global minimum [@groenen_vandevelden16].
+  - This is termed the SMACOF algorithm, and is implemented in the `smacof` `R` package [@mair, @mair_etal22].
+  - Essentially:
+    - A proxy function is defined that is equal to the stress function at a given point and (weakly) greater than the stress function at all other points.
+    - Th proxy function is minimised, and the minimising point improves on the previous point in terms of the actual stress function.
+    - The advantage is that the proxy function is chosen to be much simpler (linear/quadratic) than the stress function, and so easier to minimise.
+  - See chapter 3 of @groenen_vandevelden16 for details.
+
+# Example implementation of non-metric MDS
+
+- See Francesca's slides from last year, under `MDS/Slides` in Vula Resources.
+
+# Algorithm for non-metric MDS
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.6\textwidth]{_data_raw/img/alg-non_metric_mds.png}
 \end{figure}
 
+# Complete references {.allowframebreaks}
 
-## Complete references
 
