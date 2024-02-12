@@ -1,5 +1,8 @@
 # CHANGELOG
 
+- *Minor* (v2.1.0): Miguel Julio Rodo (13:19:20)
+  - Update final MDS slides
+
 - **Major** (v2.0.0): Miguel Julio Rodo (19:47:49)
   - Add initially-uploaded slides to Vula for MDS and intro
 
