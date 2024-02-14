@@ -1,5 +1,10 @@
 # CHANGELOG
 
+- **Major** (v3.0.0): Miguel Julio Rodo (11:35:22)
+  - Add L4 clustering slides
+
+___
+
 - *Minor* (v2.1.0): Miguel Julio Rodo (13:19:20)
   - Update final MDS slides
 
