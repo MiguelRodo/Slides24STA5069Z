@@ -1,0 +1,44 @@
+\frametitle{Selection of clustering algorithms}
+\protect\hypertarget{selection-of-clustering-algorithms}{}
+\begin{itemize}
+\tightlist
+\item
+  Part of the purpose of showing \texttt{ClustOfVar} is to show the
+  flexibility in coming up with new clustering algorithms
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The first set of slides introduce basic clustering approaches
+  \item
+    These may be combined with other techniques (such as PCAMix) to
+    create new algorithms
+  \end{itemize}
+\item
+  The problme afterwards is - which algorithm to use?
+\item
+  Typically, there are two main considerations:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Theoeretical considerations
+
+    \begin{itemize}
+    \tightlist
+    \item
+      For example: computational complexity (affecting run time, memory
+      constraints), assumptions about the data (e.g.~normality), whether
+      the number of clusters is pre-specified, etc.
+    \end{itemize}
+  \item
+    Empirical considerations
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Performance in real world datasets: correspondence with manual
+      labels, stability, ability to identify predictive variables, etc.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}

@@ -162,7 +162,7 @@ $$
 - We aim to find a set of genes $I$ and set of samples $J$ such that
 
 $$
-\sum_{i\inI}\sum_{j\inJ} \hat{\epsilon}_{ij}^2=\sum_{i\inI}\sum_{j\inJ} (y_{ij} - \hat{\mu} - \hat{\alpha}_i - \hat{\beta}_j)^2
+\sum_{i\in I}\sum_{j\in J} \hat{\epsilon}_{ij}^2=\sum_{i\in I}\sum_{j\in J} (y_{ij} - \hat{\mu} - \hat{\alpha}_i - \hat{\beta}_j)^2
 $$
 
 - is minimised. To account for varying numbers of samples, we divide by the product of the number of samples and number of genes.

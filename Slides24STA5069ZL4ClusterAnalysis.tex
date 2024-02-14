@@ -1,0 +1,706 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  ignorenonframetext,
+  aspectratio=169,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\usepackage{xcolor}
+\usepackage{amssymb} % For additional symbols
+
+% Definitions for all colors used in the presentation
+\definecolor{balancedOrange}{RGB}{255,216,180}
+\definecolor{secondaryOrange}{RGB}{251,188,5}
+\definecolor{softBlue}{RGB}{100,124,156}
+\definecolor{titleColor}{RGB}{0,51,102}
+\definecolor{accentColor}{RGB}{112,173,71}
+
+% Applying colors to Beamer elements
+\setbeamercolor{palette primary}{bg=balancedOrange,fg=titleColor}
+\setbeamercolor{palette secondary}{bg=secondaryOrange,fg=white}
+\setbeamercolor{palette tertiary}{bg=softBlue,fg=white}
+\setbeamercolor{titlelike}{parent=palette primary, fg=titleColor}
+\setbeamercolor{structure}{fg=softBlue}
+\setbeamercolor{block title}{bg=balancedOrange,fg=titleColor}
+\setbeamercolor{block body}{bg=balancedOrange!10,fg=black}
+
+% Customizing bullet points to a smaller sideways triangle and adjusting vertical position
+\setbeamertemplate{itemize item}{\raisebox{1.5pt}{\scalebox{0.6}{$\blacktriangleright$}}}
+\setbeamertemplate{itemize subitem}{\raisebox{1.3pt}{\scalebox{0.5}{$\blacktriangleright$}}}
+\setbeamertemplate{itemize subsubitem}{\raisebox{1.1pt}{\scalebox{0.4}{$\blacktriangleright$}}}
+
+% Suppressing the footline on the title slide
+\setbeamertemplate{footline}{
+    \ifnum\insertpagenumber=1
+    \else
+        \hfill\insertframenumber/\inserttotalframenumber\hspace*{1em}\vspace*{1em}
+    \fi
+}
+
+% Must 
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
+\makeatother
+\makeatletter
+\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Cluster analysis},
+  pdfauthor={Miguel Rodo},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={magenta},
+  citecolor={Blue},
+  urlcolor={cyan},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Cluster analysis}
+\subtitle{Clustering variables, assessing clustering algorithms and
+biclustering}
+\author{Miguel Rodo}
+\date{2024-02-12}
+
+\begin{document}
+\frame{\titlepage}
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt, interior hidden, enhanced, frame hidden, sharp corners, breakable]}{\end{tcolorbox}}\fi
+
+\begin{frame}{Outline}
+\protect\hypertarget{outline}{}
+\begin{itemize}
+\tightlist
+\item
+  Clustering variables using ClustOfVar
+\item
+  Clustering observationals and variables using biclustering
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{M. Chavent et al. (2011)}
+\protect\hypertarget{chavent_etal11}{}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{_data_raw/img/clust_of_var.png}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  The algorithm \texttt{ClustOfVar} clusters a mix of quantitative and
+  qualitative variables
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Synthetic variables}
+\protect\hypertarget{synthetic-variables}{}
+\begin{itemize}
+\tightlist
+\item
+  Clustering may be both hierarchical and non-hierarchical (k-means)
+\item
+  The key novelty is the introduction of a synthetic variable for each
+  cluster, used to guide clustering
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For a given cluster, the synthetic variable is the first principal
+    component of the variables in the cluster
+  \item
+    As the data may have qualitative and quantitative variables, the
+    algorithm PCAMix (Marie Chavent, Kuentz-Simonet, and Saracco 2012)
+    is used.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Homogeneity}
+\protect\hypertarget{homogeneity}{}
+\begin{itemize}
+\tightlist
+\item
+  The synthetic variable is used to define the homogeneity
+  (``togetherness'') of a cluster
+\item
+  Definition of homogeneity:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Sum of \(R^2\) between the synthetic variable and each variable in
+    the cluster
+  \item
+    \(R^2\) is the sum proportion of variation in the dependent variable
+    (the synthetic variable in this case) explained by the independent
+    variables (the variables in the cluster)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hierarchical clustering algorithm}
+\protect\hypertarget{hierarchical-clustering-algorithm}{}
+\begin{itemize}
+\tightlist
+\item
+  An agglomerative hierarchical clustering procedure is employed
+\item
+  The choice of which two clusters to merge is based on the homogeneity
+  of the original and resulting clusters. This is the only novelty.
+\item
+  Specifically, for \(H(\cdot)\) the homogeneity of a given cluster and
+  \(A\) and \(B\) two clusters, the algorithm merges two clusters such
+  that \(d(A, B) = H(A) + H(B) - H(A\cup B)\) is minimised.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Partitioning algorithm}
+\protect\hypertarget{partitioning-algorithm}{}
+\begin{itemize}
+\tightlist
+\item
+  As with hierarchical clustering, the partitioning algorithm uses the
+  synthetic variables to guide the clustering.
+\item
+  For a given cluster with synthetic variable, the association with an
+  actual variable is measured by the canonical correlation coefficient
+
+  \begin{itemize}
+  \tightlist
+  \item
+    As we are only considering the first canonical variate and the
+    synthetic variable is quantitative (not categorical), this is equal
+    to the \(R^2\) of a linear regression of the synthetic variable on
+    the actual varialble
+  \end{itemize}
+\item
+  As before, variables are allocated to clusters for which the
+  dissimilarity is minimised (canonical correlation with synthetic
+  variable is maximised).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Choosing the number of clusters}
+\protect\hypertarget{choosing-the-number-of-clusters}{}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\begin{block}{Cluster stability}
+\protect\hypertarget{cluster-stability}{}
+\begin{itemize}
+\tightlist
+\item
+  Assessed using cluster stability under resampling
+\item
+  Essentially, this is the procedure:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Bootstrap \(B\) samples of the \(n\) observations
+  \item
+    Apply the clustering algorithm to each bootstrap sample
+  \item
+    Calculate the Rand index (Rand 1971) between the clusters obtained
+    from the original sample and the clusters obtained from the
+    bootstrap sample
+  \end{itemize}
+\item
+  The average Rand index is the cluster stability.
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{block}{Rand index}
+\protect\hypertarget{rand-index}{}
+\begin{itemize}
+\tightlist
+\item
+  The Rand index is a rather odd measure to assess the similarity of the
+  two clusters.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For a given pair observations, they are regarded as having been
+    clustered the same way if they either are clustered together in both
+    clusterings or are clustered separately in both clusterings.
+  \item
+    The Rand index is the proportion of pairs of observations that are
+    clustered the same way in both clusterings.
+  \end{itemize}
+\item
+  The adjusted Rand index (Hubert and Arabie 1985) corrects for chance
+  agreement.
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Assessment of \texttt{ClustOfVar}}
+\protect\hypertarget{assessment-of-clustofvar}{}
+\begin{itemize}
+\tightlist
+\item
+  Essentially performing regression or the SVD each time the
+  dissimilarity needs to be calculated is time-consuming.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    They note that performance is slow when there are many variables.
+  \item
+    At least at the time of writing, a parallel version of the algorithm
+    was planned.
+  \item
+    Looking at their GitHub repository, this does not seem to have been
+    done.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Package is on CRAN, but has not been updated in years.
+    \end{itemize}
+  \end{itemize}
+\item
+  Good that they made an attempt to help guide the number of clusters
+  selected
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Unusual that they ignored per-cluster stability assessments (Hennig
+    2007)
+  \end{itemize}
+\item
+  Appropriateness in particular domains would need to be asssessed
+  (i.e.~how does it do on particular kinds of datasets, e.g.~economic,
+  biological)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Selection of clustering algorithms}
+\protect\hypertarget{selection-of-clustering-algorithms}{}
+\begin{itemize}
+\tightlist
+\item
+  Part of the purpose of showing \texttt{ClustOfVar} is to show the
+  flexibility in coming up with new clustering algorithms
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The first set of slides introduce basic clustering approaches
+  \item
+    These may be combined with other techniques (such as PCAMix) to
+    create new algorithms
+  \end{itemize}
+\item
+  The problme afterwards is - which algorithm to use?
+\item
+  Typically, there are two main considerations:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Theoeretical considerations
+
+    \begin{itemize}
+    \tightlist
+    \item
+      For example: computational complexity (affecting run time, memory
+      constraints), assumptions about the data (e.g.~normality), whether
+      the number of clusters is pre-specified, etc.
+    \end{itemize}
+  \item
+    Empirical considerations
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Performance in real world datasets: correspondence with manual
+      labels, stability, ability to identify predictive variables, etc.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Labelling cells}
+\protect\hypertarget{labelling-cells}{}
+\begin{itemize}
+\tightlist
+\item
+  Modern experimental techniques measure tens of variables on millions
+  of cells rapidly
+\item
+  The cells need to be labelled, e.g.~as T cells, B cells, etc., which
+  first requires clustering them.
+\item
+  Traditionally, this was done by hand (as below), but this is very slow
+  at scale:
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.675\textwidth]{_data_raw/img/manual_gating.png}
+\caption{Finak (2014)}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Aghaeepour et al. (2013)}
+\protect\hypertarget{aghaeepour_etal13}{}
+\begin{itemize}
+\tightlist
+\item
+  Whilst manual clustering of cells is slow, it is relatively trusted.
+\item
+  It was not clear how well automated algorithms would perform, in terms
+  of reproducing manual clusterings or identifying biologically relevant
+  clusters.
+\item
+  Aghaeepour et al. (2013) therefore constructed an empirical
+  comparison, assessing algorithm performance on multiple datasets in
+  terms of the following criteria:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Ability to reproduce manual clusterings
+  \item
+    Ability to identify cell types associated with disease
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Several automated algorithms typically identified manual
+clusters well}
+\protect\hypertarget{several-automated-algorithms-typically-identified-manual-clusters-well}{}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{_data_raw/img/perf-cell_id.png}
+\caption{Aghaeepour (2013)}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Biclustering}
+\protect\hypertarget{biclustering}{}
+\begin{itemize}
+\tightlist
+\item
+  Goal is to identify subgroups of observations and variables that are
+  highly correlated
+\item
+  For example:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    In gene expression data, we may want to identify genes that are
+    co-expressed in a subset of samples
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Several genes may only be expressed (made/increased/elevated) in
+      patients with, say, flu, but these genes are not expressed by
+      healthy individuals or patients with other diseases
+    \end{itemize}
+  \item
+    Attempting to cluster genes and samples separately may miss these
+    patterns
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ANOVA model for biclustering I}
+\protect\hypertarget{anova-model-for-biclustering-i}{}
+\begin{itemize}
+\tightlist
+\item
+  We assume that the expression level of gene \(i\) in sample \(j\) is
+  given by:
+\end{itemize}
+
+\[
+y_{ij} = \mu + \alpha_i + \beta_j + \epsilon_{ij}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  where \(\mu\) is average expression level, \(\alpha_i\) is the effect
+  of gene \(i\), \(\beta_j\) is the effect of sample \(j\), and
+  \(\epsilon_{ij}\) is the error term.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Note that, in this case, samples are along the columns and variables
+    along the rows.
+  \end{itemize}
+\item
+  A cluster is a subset of genes and samples for which the \(\alpha_i\)
+  and \(\beta_j\) are similar.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ANOVA model for biclustering II}
+\protect\hypertarget{anova-model-for-biclustering-ii}{}
+\begin{itemize}
+\tightlist
+\item
+  We aim to find a set of genes \(I\) and set of samples \(J\) such that
+\end{itemize}
+
+\[
+\sum_{i\inI}\sum_{j\inJ} \hat{\epsilon}_{ij}^2=\sum_{i\inI}\sum_{j\inJ} (y_{ij} - \hat{\mu} - \hat{\alpha}_i - \hat{\beta}_j)^2
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  is minimised. To account for varying numbers of samples, we divide by
+  the product of the number of samples and number of genes.
+\item
+  A greedy algorithm is used to find the biclusters (delete/add
+  rows/columns to increase objective function until no improvement
+  possible). Subsequent biclusters found in the same way, but after
+  replacing rows/columns in the current bicluster with random numbers.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{R} example of biclustering}
+\protect\hypertarget{r-example-of-biclustering}{}
+\begin{itemize}
+\tightlist
+\item
+  Available in the \texttt{Cluster\ Analysis\ (2)} slides from last
+  year.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Complete references}
+\protect\hypertarget{complete-references}{}
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-aghaeepour_etal13}{}}%
+Aghaeepour, Nima, Greg Finak, Holger Hoos, Tim R. Mosmann, Ryan
+Brinkman, Raphael Gottardo, and Richard H. Scheuermann. 2013.
+{``Critical Assessment of Automated Flow Cytometry Data Analysis
+Techniques.''} \emph{Nature Methods} 10 (3, 3): 228--38.
+\url{https://doi.org/10.1038/nmeth.2365}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-chavent_etal12}{}}%
+Chavent, Marie, Vanessa Kuentz-Simonet, and Jérôme Saracco. 2012.
+{``Orthogonal Rotation in {PCAMIX}.''} \emph{Advances in Data Analysis
+and Classification} 6 (2): 131--46.
+\url{https://doi.org/10.1007/s11634-012-0105-3}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-chavent_etal11}{}}%
+Chavent, M., V. Kuentz, B. Liquet, and L. Saracco. 2011.
+{``{ClustOfVar}: {An R Package} for the {Clustering} of {Variables}.''}
+December 1, 2011. \url{https://doi.org/10.48550/arXiv.1112.0295}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-finak_etal14d}{}}%
+Finak, Greg, Wenxin Jiang, Kevin Krouse, Chungwen Wei, Ignacio Sanz,
+Deborah Phippard, Adam Asare, Stephen C. De Rosa, Steve Self, and
+Raphael Gottardo. 2014. {``High-Throughput Flow Cytometry Data
+Normalization for Clinical Trials.''} \emph{Cytometry Part A} 85 (3):
+277--86. \url{https://doi.org/10.1002/cyto.a.22433}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-hennig07}{}}%
+Hennig, Christian. 2007. {``Cluster-Wise Assessment of Cluster
+Stability.''} \emph{Computational Statistics \& Data Analysis} 52 (1):
+258--71. \url{https://doi.org/10.1016/j.csda.2006.11.025}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-Hubert1985}{}}%
+Hubert, Lawrence, and Phipps Arabie. 1985. {``Comparing Partitions.''}
+\emph{Journal of Classification} 2 (1): 193--218.
+\url{https://EconPapers.repec.org/RePEc:spr:jclass:v:2:y:1985:i:1:p:193-218}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-rand71}{}}%
+Rand, William M. 1971. {``Objective {Criteria} for the {Evaluation} of
+{Clustering Methods}.''} \emph{Journal of the American Statistical
+Association} 66 (336): 846--50. \url{https://doi.org/10.2307/2284239}.
+
+\end{CSLReferences}
+\end{frame}
+
+
+
+\end{document}
