@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.4): Miguel Julio Rodo (09:59:44)
+  - Attempt versioned upload to GitHub
 - Patch (v3.0.2): Miguel Julio Rodo (09:50:14)
   - Upload raw data
 - Patch (v3.0.1): Miguel Julio Rodo (09:31:53)
