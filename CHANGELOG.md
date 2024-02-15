@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.21): Miguel Julio Rodo (13:06:37)
+  - Debug
 - Patch (v3.0.20): Miguel Julio Rodo (12:46:36)
   - Debug
 - Patch (v3.0.19): Miguel Julio Rodo (12:40:37)
