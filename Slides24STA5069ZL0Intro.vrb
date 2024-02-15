@@ -1,0 +1,34 @@
+\frametitle{Course structure: practice and testing}
+\protect\hypertarget{course-structure-practice-and-testing}{}
+\textbf{Tutorials}
+
+\begin{itemize}
+\tightlist
+\item
+  For each lecture, tutorials (class exercises) to implement the methods
+  discussed in \texttt{R} will be provided.
+\end{itemize}
+
+\textbf{Assignment}
+
+\begin{itemize}
+\tightlist
+\item
+  10-page summary report on applying modern multivariate methods to
+  particular problem areas, such as bioinformatics, finance, or
+  marketing.
+\end{itemize}
+
+\textbf{Exam}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Format}: Open-book take-home exam.
+\item
+  \emph{DP requirement}: lecture attendance and timely submission of
+  tutorials.
+\item
+  \emph{Pass requirement}: Average of 50\% across exam and assignment,
+  with 40\% sub-minimum for each.
+\end{itemize}

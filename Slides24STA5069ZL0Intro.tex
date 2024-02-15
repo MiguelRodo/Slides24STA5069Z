@@ -1,0 +1,437 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  ignorenonframetext,
+  aspectratio=169,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\usepackage{xcolor}
+\usepackage{amssymb} % For additional symbols
+
+% Definitions for all colors used in the presentation
+\definecolor{balancedOrange}{RGB}{255,216,180}
+\definecolor{secondaryOrange}{RGB}{251,188,5}
+\definecolor{softBlue}{RGB}{100,124,156}
+\definecolor{titleColor}{RGB}{0,51,102}
+\definecolor{accentColor}{RGB}{112,173,71}
+
+% Applying colors to Beamer elements
+\setbeamercolor{palette primary}{bg=balancedOrange,fg=titleColor}
+\setbeamercolor{palette secondary}{bg=secondaryOrange,fg=white}
+\setbeamercolor{palette tertiary}{bg=softBlue,fg=white}
+\setbeamercolor{titlelike}{parent=palette primary, fg=titleColor}
+\setbeamercolor{structure}{fg=softBlue}
+\setbeamercolor{block title}{bg=balancedOrange,fg=titleColor}
+\setbeamercolor{block body}{bg=balancedOrange!10,fg=black}
+
+% Customizing bullet points to a smaller sideways triangle and adjusting vertical position
+\setbeamertemplate{itemize item}{\raisebox{1.5pt}{\scalebox{0.6}{$\blacktriangleright$}}}
+\setbeamertemplate{itemize subitem}{\raisebox{1.3pt}{\scalebox{0.5}{$\blacktriangleright$}}}
+\setbeamertemplate{itemize subsubitem}{\raisebox{1.1pt}{\scalebox{0.4}{$\blacktriangleright$}}}
+
+% Suppressing the footline on the title slide
+\setbeamertemplate{footline}{
+    \ifnum\insertpagenumber=1
+    \else
+        \hfill\insertframenumber/\inserttotalframenumber\hspace*{1em}\vspace*{1em}
+    \fi
+}
+
+% Must 
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
+\makeatother
+\makeatletter
+\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Introduction to STA5069Z},
+  pdfauthor={Miguel Rodo},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={magenta},
+  citecolor={Blue},
+  urlcolor={cyan},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Introduction to STA5069Z}
+\subtitle{Modern multivariate statistical techniques}
+\author{Miguel Rodo}
+\date{2024-02-12}
+
+\begin{document}
+\frame{\titlepage}
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, sharp corners, interior hidden, frame hidden, enhanced, breakable, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
+
+\begin{frame}{Welcome to STA5069Z}
+\protect\hypertarget{welcome-to-sta5069z}{}
+\begin{itemize}
+\tightlist
+\item
+  This course follows on from the honours module in multivariate
+  statistics. It is aimed at looking at the application of multivariate
+  techniques to modern-day data problems, including big data problems.
+  Techniques introduced at honours level will be reviewed and extended
+  and new techniques will be introduced.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    See
+    \href{https://sebnemer.github.io/english/courses/multivariate/}{course
+    website} for specific topics coverered.
+  \end{itemize}
+\item
+  \textbf{Lecturers}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Mr Miguel Rodo (PD Hahn 5.52)
+  \item
+    Dr Sebnem Er (PD Hahn 5.55)
+  \end{itemize}
+\end{itemize}
+
+\addtocounter{framenumber}{-1}
+\end{frame}
+
+\begin{frame}{Key references}
+\protect\hypertarget{key-references}{}
+\begin{itemize}
+\tightlist
+\item
+  Primary: Izenman (2008)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Available (for purchase) at
+    \href{https://www.springer.com/gp/book/9780387781884}{Springer} and
+    \href{https://www.amazon.com/Modern-Multivariate-Statistical-Techniques-Classification/dp/0387781889}{Amazon}
+  \end{itemize}
+\item
+  Also used: Hastie, Tibshirani, and Friedman (2009)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Available for free at
+    \href{https://hastie.su.domains/ElemStatLearn/}{Hastie's own
+    website}
+  \end{itemize}
+\item
+  Paper references will be provided as we go
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Course structure: lectures}
+\protect\hypertarget{course-structure-lectures}{}
+\begin{itemize}
+\tightlist
+\item
+  The
+  \href{https://sebnemer.github.io/english/courses/multivariate/}{course
+  website} has all the information you need.
+\end{itemize}
+
+\textbf{Format}
+
+\begin{itemize}
+\tightlist
+\item
+  Each lecture will cover a new set of multivariate techniques.
+\item
+  These is a \emph{lot} of content, which will not all be covered in
+  lectures.
+\item
+  As such, significant self study is required.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Lecture slides and associated recommended readings will be provided
+    in advance.
+  \end{itemize}
+\item
+  During lectures, we will cover key concepts, tackle student questions
+  and review tutorial solutions.
+\end{itemize}
+
+\textbf{Venue and timing}
+
+\begin{itemize}
+\tightlist
+\item
+  Lectures will be 4-5.45pm on Mondays and Wednesdays in PD Hahn 4.26
+  (the Quiet Room).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Course structure: practice and testing}
+\protect\hypertarget{course-structure-practice-and-testing}{}
+\textbf{Tutorials}
+
+\begin{itemize}
+\tightlist
+\item
+  For each lecture, tutorials (class exercises) to implement the methods
+  discussed in \texttt{R} will be provided.
+\end{itemize}
+
+\textbf{Assignment}
+
+\begin{itemize}
+\tightlist
+\item
+  10-page summary report on applying modern multivariate methods to
+  particular problem areas, such as bioinformatics, finance, or
+  marketing.
+\end{itemize}
+
+\textbf{Exam}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Format}: Open-book take-home exam.
+\item
+  \emph{DP requirement}: lecture attendance and timely submission of
+  tutorials.
+\item
+  \emph{Pass requirement}: Average of 50\% across exam and assignment,
+  with 40\% sub-minimum for each.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Assignment}
+\protect\hypertarget{assignment}{}
+\begin{itemize}
+\tightlist
+\item
+  See
+  \href{https://sebnemer.github.io/english/courses/multivariate/assignment-description.html}{course
+  website} for details.
+\item
+  A template repository is available
+  \href{https://github.com/MiguelRodo/Template24STA5069Z}{here} for
+  creating a GitHub repo with the desired structure for the project.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Technical prerequisites}
+\protect\hypertarget{technical-prerequisites}{}
+\begin{itemize}
+\tightlist
+\item
+  Primarily, linear algebra. In particular:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Matrix norms
+  \item
+    Eigendecomposition
+  \item
+    SVD
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{References}
+\protect\hypertarget{references}{}
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-hastie_etal09}{}}%
+Hastie, Trevor., Robert. Tibshirani, and J. H. (Jerome H.) Friedman.
+2009. \emph{The Elements of Statistical Learning : Data Mining,
+Inference, and Prediction}. 2nd ed. Springer Series in Statistics. {New
+York}: {Springer}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-izenman08}{}}%
+Izenman, Alan J. 2008. \emph{Modern {Multivariate Statistical
+Techniques}}. Springer {Texts} in {Statistics}. {New York, NY}:
+{Springer}. \url{https://doi.org/10.1007/978-0-387-78189-1}.
+
+\end{CSLReferences}
+\end{frame}
+
+
+
+\end{document}
