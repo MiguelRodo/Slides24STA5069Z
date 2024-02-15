@@ -19,5 +19,19 @@ format:
 
 - AJ Izenman, “Modern Multivariate Statistical Techniques”, Ch 6, Springer, 2013.
 
-# Excellent
+# Introduction
+
+**Multivariate regression**
+
+- Correlate a set of dependent variables with a set of independent variables.
+  - For example:
+    - Modelling the relationship between a set of economic indicators and the GDP growth rate.
+    - Modelling the relationship between a set of psychological tests and measures of intelligence.
+  - The dependent variables may be correlated with each other, and the indepdent variables may or may not be fixed.
+
+**Reduced rank regression**
+
+- A general framework that includes multivariate regression, principal component regression, and canonical correlation analysis as special cases.
+
+# 
 

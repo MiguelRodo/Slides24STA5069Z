@@ -1,6 +1,8 @@
 directories:
   data-raw-img:
     path: _data_raw/img
+  data-raw-other:
+    path: _data_raw/other
   cache:
     path: _tmp
   output:
@@ -9,4 +11,9 @@ directories:
     path: docs
 build:
   git: yes
+  github:
+    Raw data:
+      content:
+      - data-raw-img
+      - data-raw-other
 

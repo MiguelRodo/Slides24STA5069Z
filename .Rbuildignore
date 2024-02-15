@@ -15,5 +15,7 @@
 ^_output$
 ^docs/
 ^docs$
+^_data_raw/other/
+^_data_raw/other$
 # End of projr section
 
