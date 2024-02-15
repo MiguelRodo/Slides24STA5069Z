@@ -1,0 +1,8 @@
+build:
+  github:
+    archive:
+      content:
+      - data-raw-img
+      - data-raw-other
+      - docs
+      structure: version
