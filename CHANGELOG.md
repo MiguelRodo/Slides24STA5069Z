@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.10): Miguel Julio Rodo (11:15:17)
+  - Trigger correct version upload
 - Patch (v3.0.9): Miguel Julio Rodo (11:07:56)
   - Trigger versioned upload
 - Patch (v3.0.8): Miguel Julio Rodo (11:05:36)
