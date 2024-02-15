@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.37): Miguel Julio Rodo (14:51:49)
+  - Archive correctly
 - Patch (v3.0.36): Miguel Julio Rodo (14:45:06)
   - Debug
 - Patch (v3.0.35): Miguel Julio Rodo (14:41:14)
