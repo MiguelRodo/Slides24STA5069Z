@@ -6,6 +6,6 @@ build:
       - data-raw-other
       - docs
       structure: version
-      upload:
+      send:
         version-source: none
         sync-approach: sync-using-deletion
