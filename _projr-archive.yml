@@ -6,3 +6,4 @@ build:
       - data-raw-other
       - docs
       structure: version
+      sync-approach: sync-using-deletion
