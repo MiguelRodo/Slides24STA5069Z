@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.1): Miguel Julio Rodo (09:31:53)
+  - Correct slide name
 - **Major** (v3.0.0): Miguel Julio Rodo (11:35:22)
   - Add L4 clustering slides
 
