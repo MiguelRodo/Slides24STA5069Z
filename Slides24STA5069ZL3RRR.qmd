@@ -33,5 +33,4 @@ format:
 
 - A general framework that includes multivariate regression, principal component regression, and canonical correlation analysis as special cases.
 
-# 
-
+# Heading
