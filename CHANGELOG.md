@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.11): Miguel Julio Rodo (11:21:14)
+  - Use archiving for versioned uploads
 - Patch (v3.0.10): Miguel Julio Rodo (11:15:17)
   - Trigger correct version upload
 - Patch (v3.0.9): Miguel Julio Rodo (11:07:56)
