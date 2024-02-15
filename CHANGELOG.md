@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.12): Miguel Julio Rodo (11:24:33)
+  - Sync using deletion for archiving
 - Patch (v3.0.11): Miguel Julio Rodo (11:21:14)
   - Use archiving for versioned uploads
 - Patch (v3.0.10): Miguel Julio Rodo (11:15:17)
