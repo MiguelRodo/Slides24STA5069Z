@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.8): Miguel Julio Rodo (11:05:36)
+  - Attempt true versioned Github upload
 - Patch (v3.0.7): Miguel Julio Rodo (11:00:40)
   - Trigger bug
 - Patch (v3.0.6): Miguel Julio Rodo (10:58:49)
