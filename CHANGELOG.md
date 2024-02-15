@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.0.7): Miguel Julio Rodo (11:00:40)
+  - Trigger bug
 - Patch (v3.0.6): Miguel Julio Rodo (10:58:49)
   - Attemp true versioned GitHub release
 - Patch (v3.0.5): Miguel Julio Rodo (10:02:14)
