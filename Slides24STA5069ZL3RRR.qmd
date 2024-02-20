@@ -21,18 +21,34 @@ format:
 
 # Introduction
 
-**Multivariate regression**
+- Multivariate Regression has $s$ variables $\boldsymbol{Y}=(Y_1,\ldots,Y_s)^T$ each of whose behaviour may be influenced by exactly the same set of inputs $\boldsymbol{X}=(X_1,\ldots,X_r)^T$. So components of $X$ are correlated, components of $Y$ are correlated and components of $X$ are correlated with components of $Y$.
 
-- Correlate a set of dependent variables with a set of independent variables.
-  - For example:
-    - Modelling the relationship between a set of economic indicators and the GDP growth rate.
-    - Modelling the relationship between a set of psychological tests and measures of intelligence.
-  - The dependent variables may be correlated with each other, and the indepdent variables may or may not be fixed.
+- Reduced-Rank Regression (RRR)
+  - provides a unified approach to many classical multivariate statistical techniques;
+  - analyzes a wide variety of problems involving dimension reduction and the search for structure in multivariate data;
+  - is relatively simple to program since regression estimates depend only upon the covariance matrix of $(X^T,Y^T)^T$ and the eigendecoposition of a certain symmetric matrix that generalizes the multiple squared regression coefficient $R^2$ from multiple regression.
 
-**Reduced rank regression**
 
-- A general framework that includes multivariate regression, principal component regression, and canonical correlation analysis as special cases.
+# Notation for multivariate regression
 
-# Heading
+Assume that 
 
-Change
+$\boldsymbol{Y}=(Y_1,\ldots,Y_s)^T$ is a random $s-$vector-valued output variate with mean vector $\boldsymbol{\mu_Y}$ and covariance matrix, $\Sigma_{YY}$,
+
+$\boldsymbol{X}=(X_1,\ldots,X_r)^T$ is a fixed r-vector-valued input variate.
+
+Let $\{(\boldsymbol{X}_j^T,\boldsymbol{Y}_j^T)^T,j=1,\ldots,n \} $ indicate $n$ replications.
+
+Assume we fix $\boldsymbol{X}_j=\boldsymbol{x}_j$ and observe $\boldsymbol{Y}_j=\boldsymbol{y}_j$, which means that the data is indicated by $D=\{(\boldsymbol{x}_j^T,\boldsymbol{y}_j^T)^T\,j=1,\ldots,n\}$.
+
+Define matrices $\boldsymbol{X}$ and $\boldsymbol{Y}$ such that 
+$\underbrace{X}_{r\times n}=(\boldsymbol{x}_1,\ldots,\boldsymbol{x}_n)$ and $\underbrace{Y}_{s\times n}=(\boldsymbol{y}_1,\ldots,\boldsymbol{y}_n)$
+with
+\begin{center}
+$\underbrace{\bar{\boldsymbol{x}}}_{r \times 1}=\frac{1}{n}\sum_{j=1}^{n}\boldsymbol{x}_j$ and $\underbrace{\bar{\boldsymbol{y}}}_{s \times 1}=\frac{1}{n}\sum_{j=1}^{n}\boldsymbol{y}_j$,
+
+
+$\underbrace{\bar{\boldsymbol{X}}}_{r \times n}=(\bar{\boldsymbol{x}},\ldots,\bar{\boldsymbol{x}})$ and $\underbrace{\bar{\boldsymbol{Y}}}_{r \times n}=(\bar{\boldsymbol{y}},\ldots,\bar{\boldsymbol{y}})$
+
+$\rightarrow$ centered versions,  $\underbrace{\boldsymbol{X}_c}_{r \times n}=\boldsymbol{X}-\bar{\boldsymbol{X}}$ and $\underbrace{\boldsymbol{Y}_c}_{s \times n}=\boldsymbol{Y}-\bar{\boldsymbol{Y}}$.
+\end{center}

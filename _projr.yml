@@ -12,8 +12,16 @@ directories:
 build:
   git: yes
   github:
-    Raw data:
+    raw-data:
       content:
       - data-raw-img
       - data-raw-other
+      structure: latest
+      send:
+        sync-approach: upload-all
+    slides:
+      content: docs
+      structure: latest
+      send:
+        sync-approach: upload-all
 
