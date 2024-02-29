@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.1.2): Miguel Julio Rodo (12:06:39)
+  - Archive
 - Patch (v3.1.1): Miguel Julio Rodo (12:02:57)
   - Run with fixed projr
 - Patch (v3.0.39): Miguel Julio Rodo (14:54:22)
