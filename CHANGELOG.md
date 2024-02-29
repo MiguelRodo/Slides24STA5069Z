@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.1.12): Miguel Julio Rodo (12:47:43)
+  - Revert to correct settings
 - Patch (v3.1.11): Miguel Julio Rodo (12:42:10)
   - Debug
 - Patch (v3.1.10): Miguel Julio Rodo (12:34:20)
