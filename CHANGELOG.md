@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.1.5): Miguel Julio Rodo (12:19:51)
+  - Rerun with fix to ensure data-raw not deleted if no change
 - Patch (v3.1.4): Miguel Julio Rodo (12:12:15)
   - Debug
 - Patch (v3.1.3): Miguel Julio Rodo (12:09:38)
