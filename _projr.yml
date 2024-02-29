@@ -19,6 +19,7 @@ build:
       structure: latest
       send:
         sync-approach: sync-using-version
+        version-source: none
     slides:
       content: docs
       structure: latest
