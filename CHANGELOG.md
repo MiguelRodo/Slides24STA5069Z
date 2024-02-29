@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.1.1): Miguel Julio Rodo (12:02:57)
+  - Run with fixed projr
 - Patch (v3.0.39): Miguel Julio Rodo (14:54:22)
   - Try upload latest
 - Patch (v3.0.38): Miguel Julio Rodo (14:53:29)
