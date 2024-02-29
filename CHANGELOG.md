@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.1.9): Miguel Julio Rodo (12:33:10)
+  - Attempt rebuild with new projr
 - Patch (v3.1.8): Miguel Julio Rodo (12:26:47)
   - Debug
 - Patch (v3.1.7): Miguel Julio Rodo (12:21:27)
