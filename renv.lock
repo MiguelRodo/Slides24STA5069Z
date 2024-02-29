@@ -147,8 +147,14 @@
     "codemeta": {
       "Package": "codemeta",
       "Version": "0.1.1",
-      "Source": "Repository",
-      "Repository": "RSPM",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "codemeta",
+      "RemoteUsername": "cboettig",
+      "RemotePkgRef": "cboettig/codemeta",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "14107238c584bf016fe3e6dda9ab3e31be14577a",
       "Requirements": [
         "R",
         "desc",
@@ -156,7 +162,7 @@
         "methods",
         "utils"
       ],
-      "Hash": "81048af0d716143bb5dc44d076279538"
+      "Hash": "201f5d3ead54b4029758b0f7552823a4"
     },
     "cpp11": {
       "Package": "cpp11",
@@ -541,7 +547,7 @@
     },
     "projr": {
       "Package": "projr",
-      "Version": "0.1.0-25",
+      "Version": "0.1.1-0",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
@@ -549,16 +555,17 @@
       "RemoteUsername": "SATVILab",
       "RemotePkgRef": "SATVILab/projr",
       "RemoteRef": "HEAD",
-      "RemoteSha": "0198e0c7ea0265c1021789d9a6dbffd4bec4523d",
+      "RemoteSha": "758e91f4f27ce47935f09b4fcbf22f8c6a889cbd",
       "Requirements": [
         "desc",
         "digest",
         "fs",
+        "jsonlite",
         "renv",
         "rprojroot",
         "yaml"
       ],
-      "Hash": "e33dbb35d43bab2cf76702d6a6b29bc8"
+      "Hash": "94e39943f32a023efdd5f86f614c4804"
     },
     "ps": {
       "Package": "ps",
@@ -600,13 +607,13 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "1.0.3",
+      "Version": "1.0.4",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
         "utils"
       ],
-      "Hash": "41b847654f567341725473431dd0d5ab"
+      "Hash": "11abaf7c540ff33f94514d50f929bfd1"
     },
     "rlang": {
       "Package": "rlang",

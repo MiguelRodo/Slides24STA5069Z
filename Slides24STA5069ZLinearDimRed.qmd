@@ -21,4 +21,9 @@ format:
 
 # Introduction
 
-- 
+- Exce
+
+# Projection
+
+- Suppose that we observe $p$ variables $X_1, X_2, \ldots, X_p$ and a response variable $Y$.
+- We can project the $p$-dimensional data onto a lower-dimensional space by the formula $Z = X \beta$.
