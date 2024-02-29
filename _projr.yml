@@ -18,12 +18,10 @@ build:
       - data-raw-other
       structure: latest
       send:
-        sync-approach: upload-all
-        version-source: none
+        sync-approach: sync-using-version
     slides:
       content: docs
       structure: latest
       send:
-        sync-approach: upload-all
-        version-source: none
+        sync-approach: sync-using-version
 
