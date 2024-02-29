@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.1.8): Miguel Julio Rodo (12:26:47)
+  - Debug
 - Patch (v3.1.7): Miguel Julio Rodo (12:21:27)
   - Check if bug can pe re-prompted
 - Patch (v3.1.6): Miguel Julio Rodo (12:20:48)
