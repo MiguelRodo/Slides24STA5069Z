@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.1.4): Miguel Julio Rodo (12:12:15)
+  - Debug
 - Patch (v3.1.3): Miguel Julio Rodo (12:09:38)
   - Upload with sync-using-version and version-source manifest
 - Patch (v3.1.2): Miguel Julio Rodo (12:06:39)
