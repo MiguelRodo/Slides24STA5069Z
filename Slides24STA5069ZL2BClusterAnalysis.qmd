@@ -1,0 +1,176 @@
+---
+title: Cluster analysis
+subtitle: Clustering variables, assessing clustering algorithms and biclustering
+author: Miguel Rodo
+date: "2024-02-12"
+bibliography: zotero.bib
+nocite: |
+  - @finak_etal14d
+format:
+  beamer:
+    embed-resources: true
+    aspectratio: 169
+    urlcolor: cyan
+    linkcolor: blue
+    filecolor: magenta
+    include-in-header:
+      file: preamble.tex
+---
+
+# Outline
+
+- Clustering variables using ClustOfVar
+- Clustering observationals and variables using biclustering
+
+# @chavent_etal11
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{_data_raw/img/clust_of_var.png}
+\end{figure}
+
+- The algorithm `ClustOfVar` clusters a mix of quantitative and qualitative variables
+
+# Synthetic variables
+
+- Clustering may be both hierarchical and non-hierarchical (k-means)
+- The key novelty is the introduction of a synthetic variable for each cluster, used to guide clustering
+  - For a given cluster, the synthetic variable is the first principal component of the variables in the cluster
+  - As the data may have qualitative and quantitative variables, the algorithm PCAMix [@chavent_etal12] is used.
+
+# Homogeneity
+
+- The synthetic variable is used to define the homogeneity ("togetherness") of a cluster
+- Definition of homogeneity:
+  - Sum of $R^2$ between the synthetic variable and each variable in the cluster
+  - $R^2$ is the sum proportion of variation in the dependent variable (the synthetic variable in this case) explained by the independent variables (the variables in the cluster)
+
+# Hierarchical clustering algorithm
+
+- An agglomerative hierarchical clustering procedure is employed
+- The choice of which two clusters to merge is based on the homogeneity of the original and resulting clusters. This is the only novelty.
+- Specifically, for $H(\cdot)$ the homogeneity of a given cluster and $A$ and $B$ two clusters, the algorithm merges two clusters such that $d(A, B) = H(A) + H(B) - H(A\cup B)$ is minimised.
+
+# Partitioning algorithm
+
+- As with hierarchical clustering, the partitioning algorithm uses the synthetic variables to guide the clustering. 
+- For a given cluster with synthetic variable, the association with an actual variable is measured by the canonical correlation coefficient 
+  - As we are only considering the first canonical variate and the synthetic variable is quantitative (not categorical), this is equal to the $R^2$ of a linear regression of the synthetic variable on the actual varialble
+- As before, variables are allocated to clusters for which the dissimilarity is minimised (canonical correlation with synthetic variable is maximised).
+
+# Choosing the number of clusters
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Cluster stability
+
+- Assessed using cluster stability under resampling
+- Essentially, this is the procedure:
+  - Bootstrap $B$ samples of the $n$ observations
+  - Apply the clustering algorithm to each bootstrap sample
+  - Calculate the Rand index [@rand71] between the clusters obtained from the original sample and the clusters obtained from the bootstrap sample
+- The average Rand index is the cluster stability.
+
+:::
+
+::: {.column width="50%"}
+
+### Rand index
+- The Rand index is a rather odd measure to assess the similarity of the two clusters.
+  - For a given pair observations, they are regarded as having been clustered the same way if they either are clustered together in both clusterings or are clustered separately in both clusterings.
+  - The Rand index is the proportion of pairs of observations that are clustered the same way in both clusterings.
+- The adjusted Rand index [@Hubert1985] corrects for chance agreement.
+
+:::
+
+::::
+
+# Assessment of `ClustOfVar`
+
+- Essentially performing regression or the SVD each time the dissimilarity needs to be calculated is time-consuming.
+  - They note that performance is slow when there are many variables.
+  - At least at the time of writing, a parallel version of the algorithm was planned.
+  - Looking at their GitHub repository, this does not seem to have been done.
+    - Package is on CRAN, but has not been updated in years.
+- Good that they made an attempt to help guide the number of clusters selected
+  - Unusual that they ignored per-cluster stability assessments [@hennig07]
+- Appropriateness in particular domains would need to be asssessed (i.e. how does it do on particular kinds of datasets, e.g. economic, biological)
+
+# Selection of clustering algorithms
+
+- Part of the purpose of showing `ClustOfVar` is to show the flexibility in coming up with new clustering algorithms
+  - The first set of slides introduce basic clustering approaches
+  - These may be combined with other techniques (such as PCAMix) to create new algorithms
+- The problme afterwards is - which algorithm to use?
+- Typically, there are two main considerations:
+  - Theoeretical considerations
+    - For example: computational complexity (affecting run time, memory constraints), assumptions about the data (e.g. normality), whether the number of clusters is pre-specified, etc.
+  - Empirical considerations
+    - Performance in real world datasets: correspondence with manual labels, stability, ability to identify predictive variables, etc.
+
+# Labelling cells
+
+- Modern experimental techniques measure tens of variables on millions of cells rapidly
+- The cells need to be labelled, e.g. as T cells, B cells, etc., which first requires clustering them.
+- Traditionally, this was done by hand (as below), but this is very slow at scale:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.675\textwidth]{_data_raw/img/manual_gating.png}
+\caption{Finak (2014)}
+\end{figure}
+
+# @aghaeepour_etal13
+
+- Whilst manual clustering of cells is slow, it is relatively trusted.
+- It was not clear how well automated algorithms would perform, in terms of reproducing manual clusterings or identifying biologically relevant clusters.
+- @aghaeepour_etal13 therefore constructed an empirical comparison, assessing algorithm performance on multiple datasets in terms of the following criteria:
+  - Ability to reproduce manual clusterings
+  - Ability to identify cell types associated with disease
+
+# Several automated algorithms typically identified manual clusters well
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{_data_raw/img/perf-cell_id.png}
+\caption{Aghaeepour (2013)}
+\end{figure}
+
+# Biclustering
+
+- Goal is to identify subgroups of observations and variables that are highly correlated
+- For example:
+  - In gene expression data, we may want to identify genes that are co-expressed in a subset of samples
+    - Several genes may only be expressed (made/increased/elevated) in patients with, say, flu, but these genes are not expressed by healthy individuals or patients with other diseases
+  - Attempting to cluster genes and samples separately may miss these patterns
+
+# ANOVA model for biclustering I
+
+- We assume that the expression level of gene $i$ in sample $j$ is given by:
+
+$$
+y_{ij} = \mu + \alpha_i + \beta_j + \epsilon_{ij}
+$$
+
+- where $\mu$ is average expression level, $\alpha_i$ is the effect of gene $i$, $\beta_j$ is the effect of sample $j$, and $\epsilon_{ij}$ is the error term. 
+  - Note that, in this case, samples are along the columns and variables along the rows.
+- A cluster is a subset of genes and samples for which the $\alpha_i$ and $\beta_j$ are similar.
+
+# ANOVA model for biclustering II
+
+- We aim to find a set of genes $I$ and set of samples $J$ such that
+
+$$
+\sum_{i\in I}\sum_{j\in J} \hat{\epsilon}_{ij}^2=\sum_{i\in I}\sum_{j\in J} (y_{ij} - \hat{\mu} - \hat{\alpha}_i - \hat{\beta}_j)^2
+$$
+
+- is minimised. To account for varying numbers of samples, we divide by the product of the number of samples and number of genes.
+- A greedy algorithm is used to find the biclusters (delete/add rows/columns to increase objective function until no improvement possible). Subsequent biclusters found in the same way, but after replacing rows/columns in the current bicluster with random numbers.
+
+# `R` example of biclustering
+
+- Available in the `Cluster Analysis (2)` slides from last year.
+
+# Complete references {.allowframebreaks}
+
