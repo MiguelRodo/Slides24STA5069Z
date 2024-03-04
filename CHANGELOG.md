@@ -1,5 +1,8 @@
 # CHANGELOG
 
+- *Minor* (v3.3.0): Miguel Julio Rodo (10:53:46)
+  - Add back slides that were previously removed
+
 - *Minor* (v3.2.0): Miguel Julio Rodo (10:43:53)
   - Add back slides removed for debugging
 
