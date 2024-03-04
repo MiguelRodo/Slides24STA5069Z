@@ -1,5 +1,8 @@
 # CHANGELOG
 
+- *Minor* (v3.2.0): Miguel Julio Rodo (10:43:53)
+  - Add back slides removed for debugging
+
 - Patch (v3.1.13): Miguel Julio Rodo (12:52:48)
   - Revert to correct settings
 - Patch (v3.1.12): Miguel Julio Rodo (12:47:43)
