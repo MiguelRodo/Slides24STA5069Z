@@ -1,0 +1,163 @@
+---
+title: Q&A for Multidimensional Scaling
+format:
+  html:
+    embed-resources: true
+---
+
+- What is the main goal of MDS?
+  - To represent dissimilarity data in a low-dimensional space, typically for visualization purposes
+
+- How does MDS differ from other dimensionality reduction techniques like PCA in terms of input data?
+  - MDS begins with the dissimilarities or similarities between data points, while techniques like PCA begin with the original data points themselves (i.e., the X matrix)
+
+- What are the four scales of measurement proposed by Stevens (1946), and how do they differ:
+  - First?
+    - Ratio scale: a natural zero exists, allowing meaningful ratios (e.g., height)
+  - Second?
+    - Interval scale: no natural zero, but differences between points are comparable (e.g., temperature)
+  - Third?
+    - Ordinal scale: points have a greater than/less than relationship, but differences are not necessarily comparable (e.g., rankings)
+  - Fourth?
+    - Nominal scale: no greater than/less than relationship between points (e.g., names)
+
+- What are the two main categories of MDS techniques, and how do they differ in terms of interpreting dissimilarities:
+  - First?
+    - Metric MDS: dissimilarities can be interpreted at least on an interval scale
+  - Second?
+    - Non-metric MDS: dissimilarities can only be interpreted in an ordinal sense
+
+- What are the two sub-techniques of metric MDS?
+  - Classical scaling and least-squares scaling
+
+- What are the properties of a similarity/dissimilarity measure (δ_ij) used as input for MDS:
+  - First?
+    - Symmetric: dissimilarity from A to B is the same as from B to A
+  - Second?
+    - Each object has zero dissimilarity from itself
+  - Third?
+    - Range typically does not cross zero
+
+- What are the implied properties of the proximity matrix (Δ = (δ_ij)) used in MDS:
+  - First?
+    - Symmetric
+  - Second?
+    - Hollow (0s on the diagonal)
+  - Third?
+    - Square (n x n, where n is the number of objects)
+  - Fourth?
+    - Typically either entirely non-negative or entirely non-positive
+
+- What is the notation for the number of lower off-diagonal elements (m) in the proximity matrix?
+  - m = n(n-1)/2, excluding duplicate and diagonal elements
+
+- What are some common dissimilarity measures used in MDS:
+  - First?
+    - Minkowski distance: (Σ|x_ik - x_jk|^p)^(1/p), with special cases city-block (p=1), Euclidean (p=2), Chebychev (p=∞)
+  - Second?
+    - Hamming distance: number of positions with different values in equal-length sequences
+  - Third?
+    - Real-world measures like travel time, time to failure, or subjective differences
+
+- What are some common similarity measures used in MDS:
+  - First?
+    - For continuous data: centred dot product ((x_i - x̄)' (x_j - x̄)), correlation coefficients (Pearson, Spearman, etc.)
+  - Second? 
+    - For binary data: Jaccard index (|A ∩ B| / |A ∪ B|) and many others
+  - Third?
+    - Real-world measures like frequency of signal confusion
+
+- What is the goal of classical scaling, and what does it aim to approximate?
+  - To find the optimal low-dimensional configuration of points such that their centred inner products (B matrix) match those in the original space as closely as possible
+
+- If the dissimilarities are Euclidean distances, what does the classical scaling solution match?
+  - The principal component solution from PCA
+
+- What are the major steps in the classical scaling procedure:
+  - First?
+    - Calculate the matrix B of centred dot products (b_ij = x_i' x_j) from the dissimilarities Δ
+  - Second?
+    - Find the rank t matrix B* whose L2 norm (sum of squared differences) from B is smallest
+  - Third?
+    - The minimizing configuration is a function of the singular value decomposition (SVD) of B
+
+- How can the centred inner product matrix B be obtained from the dissimilarities Δ in classical scaling?
+  - By double-centering the matrix A, where a_ij = -0.5 * δ_ij^2, using the centering matrix H = I - (1/n)11'
+
+- What is the objective function that least-squares scaling minimizes?
+  - L_f(Y_1, ..., Y_n; W; f) = Σw_ij(d_ij - f(δ_ij))^2, the weighted sum of squared differences between configuration distances (d_ij) and a monotonic transformation (f) of the dissimilarities (δ_ij)
+
+- How is least-squares scaling more flexible than classical scaling:
+  - First?
+    - It can handle non-Euclidean distance dissimilarities without violating assumptions
+  - Second?
+    - It can handle transformed dissimilarities (f(δ_ij)), including using only ranks
+  - Third?
+    - Errors in dissimilarity approximations can be weighted differently using w_ij
+
+- What are some common choices for the transformation function f in least-squares scaling:
+  - First?
+    - Linear transformation: f(δ_ij) = α + βδ_ij, with α = 0 preserving ratio scale and α > 0 preserving interval scale
+  - Second?
+    - Functions to pull in large values, like log, square root, or other monotonic transformations
+  - Third?
+    - Monotonic rank-preserving transformations, which lose the interval scale but are less sensitive to outliers (used in non-metric MDS)
+
+- What are two common choices for the weights (w_ij) in least-squares scaling:
+  - First?
+    - Constant weights: w_ij = 1/Σ(δ_ij^2), which may help avoid computational precision errors
+  - Second?
+    - Sammon mapping weights to down-weight larger original distances: w_ij = 1/(δ_ij*Σδ_ij)
+
+- What is the algorithm for metric least-squares scaling:
+  - First?
+    - Assign points to initial coordinates (may be arbitrary or from classical scaling)
+  - Second?
+    - Repeat until convergence: compute Euclidean distances d_ij between all pairs of points, move points in the direction that minimizes stress across several random restarts
+
+- In non-metric MDS, what is approximated rather than the actual dissimilarities?
+  - A monotonic transformation of the dissimilarities that preserves their ranks, not their actual values
+
+- What is a Shepard diagram used to illustrate in non-metric MDS?
+  - The relationship between the configuration distances (d_ij) and the ranked dissimilarities, with a monotonically increasing line representing the disparities
+
+- What are disparities (d̂_ij) in non-metric MDS?
+  - The fitted values of a monotonically increasing function of the configuration distances against the dissimilarity ranks, such that d̂_i1j1 ≤ d̂_i2j2 ≤ ... ≤ d̂_imjm
+
+- What are two common methods for calculating disparities in non-metric MDS, and how do they differ?
+  - First?
+    - Isotonic regression: simpler conceptually but produces a non-smooth step function
+  - Second?
+    - Monotonic splines: more complex but can produce a smooth function
+
+- Describe the isotonic regression algorithm for calculating disparities:
+  - First?
+    - Set the lowest-rank disparity equal to the lowest-rank configuration distance: d̂_i1j1 = d_i1j1
+  - Second?
+    - For each subsequent rank k, if the configuration distance d_ikjk is not less than any lower-rank disparities, set the disparity d̂_ikjk equal to d_ikjk
+  - Third?
+    - If d_ikjk is less than a lower-rank disparity d̂_ivjv, set the disparities for ranks v through k equal to their average: d̂_iljl = (Σd̂_iljl from l=v to k) / (k-v+1)
+
+- What does the stress function in non-metric MDS measure?
+  - The (weighted) sum of squared differences between the configuration distances (d_ij) and the disparities (d̂_ij), which represents the monotonicity of the distances with respect to the original dissimilarity ranks
+
+- What are some variations of the stress function in non-metric MDS:
+  - First?
+    - Raw stress: S = Σ(d_ij - d̂_ij)^2, unweighted
+  - Second?
+    - Kruskal's Stress-1: S = [Σ(d_ij - d̂_ij)^2 / Σd_ij^2]^(1/2), normalized by the sum of squared distances
+  - Third?
+    - Stress-2: S = [Σ(d_ij - d̂_ij)^2 / Σ(d_ij - d̄)^2]^(1/2), normalized by the variance of the distances
+  - Fourth?
+    - Sammon's stress: S = [Σ(d_ij - d̂_ij)^2 / (d̂_ij * Σd̂_ij)]^(1/2), with Sammon mapping weights
+
+- What algorithm is commonly used to efficiently minimize the stress function in non-metric MDS?
+  - SMACOF (Scaling by Majorizing a Complicated Function), which uses iterative majorization
+
+- How does the SMACOF algorithm work to minimize stress:
+  - First?
+    - Define a simpler proxy function that majorizes (is greater than or equal to) the actual stress function at all points except the current configuration, where they are equal
+  - Second?
+    - Minimize the proxy function to improve the stress at each iteration, since the minimizing point of the proxy is guaranteed to have lower stress than the current point
+  - Third?
+    - Repeat until convergence to the global minimum of the stress function

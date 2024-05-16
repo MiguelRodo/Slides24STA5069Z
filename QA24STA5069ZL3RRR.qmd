@@ -1,0 +1,204 @@
+---
+title: Q&A for Reduced Rank Regression
+format:
+  html:
+    embed-resources: true
+---
+
+- What is linear dimension reduction?
+
+  - Projection of high-dimensional data into a lower-dimensional subspace by creating a reduced set of linear transformations of the input variables, also called "feature extraction"
+
+- What are two examples of linear dimension reduction methods?
+
+  - Principal Component Analysis (PCA) and Canonical Variate or Correlation analysis (CVA or CCA)
+
+- What type of problems are PCA and CVA?
+
+  - Eigenvalue-eigenvector problems
+
+- PCA and CVA can also be viewed as special cases of what?
+
+  - Multivariate reduced rank regression
+
+- What is the main aim of PCA?
+
+  - Dimension reduction
+
+- What else can PCA be used for besides dimension reduction?
+
+  - To discover important features of the data using graphical displays of the principal component scores
+
+- In PCA, what does the random r-vector X represent?
+
+  - The set of $r$ (unordered and correlated) input variables, $X_1, X_2, \ldots, X_r$
+
+- What does PCA seek to replace the set of $r$ input variables with?
+
+  - A potentially smaller set of $t$ (ordered and uncorrelated) linear projections of the input variables
+
+- What is the formula for the $j$th linear projection in PCA?
+
+  - $\xi_j = \mathbf{b}^TX = b_{j1}X_1 + \ldots + b_{jr}X_r$
+
+- What does "information" equal in the context of PCA?
+
+  - "Total variation", which equals the trace of the covariance matrix $\Sigma_{XX}$
+
+- What does the spectral decomposition theorem state about the covariance matrix $\Sigma_{XX}$?
+
+  - $\Sigma_{XX} = \mathbf{U}\Lambda\mathbf{U}^T$ with $\mathbf{U}^T\mathbf{U} = \mathbf{I}_r$, and $\mathrm{tr}(\Sigma_{XX}) = \mathrm{tr}(\Lambda) = \sum_{j=1}^r \lambda_j$
+
+- How are the first $t$ linear projections $\xi_j$, $j = 1, 2, \ldots, t$ ranked in PCA?
+
+  - Through their variances such that $\mathrm{var}(\xi_1) \geq \mathrm{var}(\xi_2) \geq \ldots \geq \mathrm{var}(\xi_t)$
+
+- What is the relationship between $\xi_j$ and $\xi_k$ for $k < j$?
+
+  - $\xi_j$ is uncorrelated with all $\xi_k$ for $k < j$
+
+- In the least squares motivation for the PCA model, what are we trying to find?
+
+  - An $r$-vector $\boldsymbol{\mu}$ and an $r \times t$ matrix $\mathbf{A}$ such that $\mathbf{X} \approx \boldsymbol{\mu} + \mathbf{A}\boldsymbol{\xi}$ in some least squares sense
+
+- What is the minimum achieved through in the least squares motivation for PCA?
+
+  - The reduced-rank regression solution: $\mathbf{A}_{(t)} = (\mathbf{v}_1, \ldots, \mathbf{v}_t) = \mathbf{B}_{(t)}^T$ and $\boldsymbol{\mu}_{(t)} = (\mathbf{I}_r - \mathbf{A}_{(t)}\mathbf{B}_{(t)})\boldsymbol{\mu}_X$, where $\mathbf{v}_j$ is the eigenvector associated with the $j$th largest eigenvalue $\lambda_j$ of $\Sigma_{XX}$
+
+- What is the best rank-$t$ approximation to the original $\mathbf{X}$ given by in PCA?
+
+  - $\hat{\mathbf{X}}_{(t)} = \boldsymbol{\mu}_{(t)} + \mathbf{C}_{(t)}\mathbf{X} = \boldsymbol{\mu}_x + \mathbf{C}_{(t)}(\mathbf{X} - \boldsymbol{\mu}_x)$, where $\mathbf{C}_{(t)} = \mathbf{A}_{(t)}\mathbf{B}_{(t)} = \sum_{j=1}^t \mathbf{v}_j\mathbf{v}_j^T$
+
+- What does $\mathbf{C}_{(t)} = \mathbf{A}_{(t)}\mathbf{B}_{(t)}$ imply about the most accurate rank-$t$ least-squares reconstruction of $\mathbf{X}$?
+
+  - It can be obtained by using the composition of two linear maps
+
+- What does the first linear map $L : \mathbb{R}^r \to \mathbb{R}^t$ do?
+
+  - Takes the first $t$ columns of $\mathbf{V}$ to form $t$ linear projections of $\mathbf{X}$
+
+- What does the second linear map $L' : \mathbb{R}^t \to \mathbb{R}^r$ do? 
+
+  - Uses the same $t$ columns of $\mathbf{V}$ to carry out a linear reconstruction of $\mathbf{X}$ from these projections
+
+- What are the first $t$ principal components given by?
+
+  - The linear projections $\xi_j = \mathbf{v}_j^T\mathbf{X}$, $j = 1, \ldots, t$
+
+- What does the covariance between $\xi_i$ and $\xi_j$ equal?
+
+  - $\mathrm{cov}(\xi_i, \xi_j) = \delta_{ij}\lambda_j$, implying the $\xi_j$ are uncorrelated
+
+- What is a goodness-of-fit criterion of the $t$-dimensional approximation to the original $r$-dimensional variable space given by?
+
+  - $(\lambda_{t+1} + \ldots + \lambda_r) / (\lambda_1 + \ldots + \lambda_r)$, which should be small if the approximation is good
+
+- What did the honors revision of PCA cover:
+
+  - First?
+    - PCA as a variance-maximization technique
+
+  - Second? 
+    - Sample PCA
+
+  - Third?
+    - Scree plot to help decide how many principal components to retain
+
+  - Fourth?
+    - PCA on standardized variables uses correlation rather than covariance matrix
+
+- What is CVA/CCA a method for studying?
+
+  - The linear relationships between two vector variates, $\mathbf{X} = (X_1, \ldots, X_r)^T$ and $\mathbf{Y} = (Y_1, \ldots, Y_s)^T$
+
+- What does CVA seek to replace the two sets of correlated variables $\mathbf{X}$ and $\mathbf{Y}$ by?
+
+  - $t$ pairs of new variables $(\xi_i, \omega_i)$, $i = 1, 2, \ldots, t \leq \min(r, s)$
+
+- What are the formulas for $\xi_j$ and $\omega_j$ in CVA?
+
+  - $\xi_j = \mathbf{g}_j^T\mathbf{X} = g_{1j}X_1 + g_{2j}X_2 + \ldots + g_{rj}X_r$
+  - $\omega_j = \mathbf{h}_j^T\mathbf{Y} = h_{1j}Y_1 + h_{2j}Y_2 + \ldots + h_{sj}Y_S$ 
+
+- How are the $j$th pair of coefficient vectors $\mathbf{g}_j$ and $\mathbf{h}_j$ chosen in CVA:
+
+  - First?
+    - The pairs $\{(\xi_j, \omega_j)\}$ are ranked based on their correlations $\rho_j$
+
+  - Second?
+    - $\xi_j$ is uncorrelated with any previously derived $\xi_k$ 
+
+  - Third? 
+    - $\omega_j$ are uncorrelated
+
+- What is the formula for the correlation $\rho_j$ between $\xi_j$ and $\omega_j$?
+
+  - $\rho_j = \mathrm{corr}(\xi_j, \omega_j) = \frac{\mathbf{g}_j^T\Sigma_{XY}\mathbf{h}_j}{(\mathbf{g}_j^T\Sigma_{XX}\mathbf{g}_j)^{1/2}(\mathbf{h}_j^T\Sigma_{YY}\mathbf{h}_j)^{1/2}}$
+
+- What does CVA do to the original $\mathbf{X}$ and $\mathbf{Y}$ variables?
+
+  - Every bit of correlation is wrung out of them and deposited in an orderly fashion into pairs of new variables $(\xi_j, \omega_j)$, which have a special correlation structure
+
+- In the least-squares optimality motivation for CVA, what are we trying to find matrices $\mathbf{G}$ and $\mathbf{H}$ to do?
+
+  - Linearly project the vector variates $\mathbf{X}$ and $\mathbf{Y}$ into new vector variates $\boldsymbol{\xi} = \mathbf{G}\mathbf{X}$ and $\boldsymbol{\omega} = \mathbf{H}\mathbf{Y}$
+
+- What criterion are we trying to minimize in the least-squares optimality motivation for CVA? 
+
+  - $\mathrm{E}\{(\mathbf{H}\mathbf{Y} - \boldsymbol{\nu} - \mathbf{G}\mathbf{X})(\mathbf{H}\mathbf{Y} - \boldsymbol{\nu} - \mathbf{G}\mathbf{X})^T\}$, assuming $\mathrm{cov}(\boldsymbol{\omega}) = \Sigma_{\omega\omega} = \mathbf{H}\Sigma_{YY}\mathbf{H}^T = \mathbf{I}_t$
+
+- What are the $\boldsymbol{\nu}$, $\mathbf{G}$ & $\mathbf{H}$ that minimize the least squares criterion given by?
+
+  - $\boldsymbol{\nu}_{(t)} = \mathbf{H}_{(t)}\boldsymbol{\mu}_Y - \mathbf{G}_{(t)}\boldsymbol{\mu}_X$
+  - $\mathbf{G}_{(t)} = [\mathbf{v}_1^T \ldots \mathbf{v}_t^T]\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1} = [\lambda_1\mathbf{u}_1^T \ldots \lambda_t\mathbf{u}_t^T]\Sigma_{XX}^{-1/2}$
+  - $\mathbf{H}_{(t)} = [\mathbf{v}_1^T \ldots \mathbf{v}_t^T]\Sigma_{YY}^{-1/2}$
+  
+    where $\mathbf{u}_j$ is the eigenvector associated with the $j$th largest eigenvalue $\lambda_j^2$ of $\mathbf{R}^* = \Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1/2}$ and $\mathbf{v}_j$ is the eigenvector associated with the $j$th largest eigenvalue $\lambda_j^2$ of $\mathbf{R} = \Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1/2}$
+
+- What is the $j$th pair of canonical variate scores $(\xi_j, \omega_j)$ given by?
+
+  - $\xi_j = \mathbf{g}_j^T\mathbf{X}$ and $\omega_j = \mathbf{h}_j^T\mathbf{Y}$, where:
+    - $\mathbf{g}_j = \Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1/2}\mathbf{v}_j = \lambda_j\Sigma_{XX}^{-1/2}\mathbf{u}_j$ 
+    - $\mathbf{h}_j = \Sigma_{YY}^{-1/2}\mathbf{v}_j$
+
+- What is the covariance matrix of the canonical variate scores given by?
+
+  - $\mathrm{cov}\{\boldsymbol{\xi}_{(t)}, \boldsymbol{\omega}_{(t)}\} = \begin{bmatrix} \mathbf{I}_t & \Lambda \\ \Lambda & \mathbf{I}_t \end{bmatrix}$
+  
+    where $\Lambda = \mathrm{diag}(\lambda_1^2, \lambda_2^2, \ldots, \lambda_t^2)$
+
+- What is the correlation matrix of the canonical variate scores?
+
+  - $\mathrm{Corr}\{\boldsymbol{\xi}_{(t)}, \boldsymbol{\omega}_{(t)}\} = \begin{bmatrix} \mathbf{I}_t & \Lambda^{1/2} \\ \Lambda^{1/2} & \mathbf{I}_t \end{bmatrix}$
+
+- If we set $\rho_j = \lambda_j$, called the "canonical correlation coefficient", what does $\mathrm{corr}(\xi_j, \xi_k)$, $\mathrm{corr}(\xi_j, \omega_k)$ and $\mathrm{corr}(\omega_j, \omega_k)$ equal?
+
+  - $\mathrm{corr}(\xi_j, \xi_k) = \delta_{jk}$
+  - $\mathrm{corr}(\xi_j, \omega_k) = \rho_j\delta_{jk}$
+  - $\mathrm{corr}(\omega_j, \omega_k) = \delta_{jk}$
+
+- How are the coefficients $\{g_{ij}\}$ and $\{h_{ij}\}$ of linear combinations chosen sequentially in CVA:
+
+  - First?  
+    - First pair $\{\xi_1, \omega_1\}$ has the largest possible correlation $\rho_1$ among all such linear combinations of $\mathbf{X}$ and $\mathbf{Y}$
+
+  - Second?
+    - Second pair $\{\xi_2, \omega_2\}$ has the largest possible correlation $\rho_2$ among all linear combinations of $\mathbf{X}$ and $\mathbf{Y}$ in which $\xi_2$ is uncorrelated with $\xi_1$ and $\omega_2$ is uncorrelated with $\omega_1$, etc.
+
+- How are the CVA and RRR matrices related?
+
+  - If $\Gamma = \Sigma^{-1/2}$ then the CVA and RRR matrices are identical
+
+- What does the number $t$ of pairs of canonical variates with nonzero canonical correlations equal?
+
+  - The rank $t$ of the regression coefficient matrix $\mathbf{C}$, where $\mathbf{C}_{(t)} = \mathbf{A}_{(t)}\mathbf{B}_{(t)} = \mathbf{H}_{(t)}\mathbf{G}_{(t)} = \Sigma_{YY}^{1/2}(\sum_{j=1}^t \mathbf{v}_j\mathbf{v}_j^T)\Sigma_{YY}$
+
+- When $s = 1$, i.e. just one $Y$, what does $\mathbf{R}$ reduce to?
+
+  - The squared multiple correlation coefficient of $Y$ with the best linear predictor of $Y$ using $X_1, X_2, \ldots, X_r$:
+    
+    $\mathbf{R} = \rho_{Y \cdot X_1 \ldots X_r}^2 = \frac{\boldsymbol{\sigma}_{YX}^T\Sigma_{XX}^{-1}\boldsymbol{\sigma}_{XY}}{\sigma_Y^2}$
+
+- How can the $j$th canonical correlation coefficient $\rho_j$ be interpreted?
+
+  - As either the multiple correlation coefficient of $\xi_j$ with $\mathbf{Y}$ or $\omega_j$ with $\mathbf{X}$. So $\rho_j$ is the proportion of the variance of $\xi_j$ attributable to its linear regression on $\mathbf{Y}$, and similarly for $\omega$.
