@@ -1,5 +1,8 @@
 # CHANGELOG
 
+- *Minor* (v3.5.0): Miguel Rodo (2025-02-24 13:29:50)
+  - Add lecture 3 content
+
 - *Minor* (v3.4.0): Miguel Julio Rodo (10:59:14)
   - Test
 

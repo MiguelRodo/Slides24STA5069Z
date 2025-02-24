@@ -4,17 +4,16 @@
   "identifier": "Slides24STA5069Z",
   "description": "Slides for 2024 STA5069Z MSc multivariate statistics course",
   "name": "Slides24STA5069Z: Slides for 2024 STA5069Z MSc multivariate statistics course",
-  "relatedLink": "https://github.com/MiguelRodo/Slides24STA5069Z/#readme",
-  "codeRepository": "https://github.com/MiguelRodo/Slides24STA5069Z",
+  "codeRepository": "https://github.com/MiguelRodo/Slides24STA5069Z/",
   "issueTracker": "https://github.com/MiguelRodo/Slides24STA5069Z/issues",
   "license": "{{ License }}",
-  "version": "0.0.0.1",
+  "version": "3.5.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.3.2 (2023-10-31)",
+  "runtimePlatform": "R version 4.4.1 (2024-06-14)",
   "author": [
     {
       "@type": "Person",
@@ -34,7 +33,7 @@
   "softwareRequirements": {
     "SystemRequirements": null
   },
-  "fileSize": "2.015KB",
+  "fileSize": "1549.539KB",
   "citation": [
     {
       "@type": "CreativeWork",
