@@ -27,7 +27,7 @@ format:
 #| results: asis
 #| fig-align: center
 knitr::include_graphics(
-  projr::projr_path_get("data-raw-img", "airline_distance.png")
+  projr::projr_path_get("raw-img", "airline_distance.png")
 )
 ```
 
@@ -45,7 +45,7 @@ library(ggrepel)
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{_data_raw/img/airline_mds.png}
+\includegraphics[width=0.6\textwidth]{_raw/img/airline_mds.png}
 \end{figure}
 
 # What is MDS?
@@ -137,7 +137,7 @@ library(ggrepel)
 #| results: asis
 #| fig-align: center
 knitr::include_graphics(
-  projr::projr_path_get("data-raw-img", "city_distance.png")
+  projr::projr_path_get("raw-img", "city_distance.png")
 )
 ```
 
@@ -197,7 +197,7 @@ knitr::include_graphics(
 #| results: asis
 #| fig-align: center
 knitr::include_graphics(
-  projr::projr_path_get("data-raw-img", "derivation-dot_from_distance.png")
+  projr::projr_path_get("raw-img", "derivation-dot_from_distance.png")
 )
 ```
 
@@ -359,7 +359,7 @@ p
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.55\textwidth]{_data_raw/img/alg-classical_scaling.png}
+\includegraphics[width=0.55\textwidth]{_raw/img/alg-classical_scaling.png}
 \end{figure}
 
 # Another classical scaling example: dissimilarities between SA cities I
@@ -709,7 +709,7 @@ p
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{_data_raw/img/morse_code_dots.png}
+\includegraphics[width=0.6\textwidth]{_raw/img/morse_code_dots.png}
 \end{figure}
 
 # Morse code example II
@@ -834,7 +834,7 @@ mds_obj[["spp"]][1:5]
 
 \begin{figure}[H]
 \center
-\includegraphics[width=0.5\textwidth]{_data_raw/img/morse_code_mds.png}
+\includegraphics[width=0.5\textwidth]{_raw/img/morse_code_mds.png}
 \end{figure}
 
 # Randomness in results
@@ -1119,7 +1119,7 @@ $$
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{_data_raw/img/isotonic_reg_example.png}
+\includegraphics[width=0.8\textwidth]{_raw/img/isotonic_reg_example.png}
 \end{figure}
 
 # Splines
@@ -1133,7 +1133,7 @@ $$
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\textwidth]{_data_raw/img/linear_spline_example.png}
+\includegraphics[width=0.5\textwidth]{_raw/img/linear_spline_example.png}
 \caption{Harrell (2015)}
 \end{figure}
 
@@ -1183,7 +1183,7 @@ $$
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{_data_raw/img/alg-non_metric_mds.png}
+\includegraphics[width=0.6\textwidth]{_raw/img/alg-non_metric_mds.png}
 \end{figure}
 
 # Complete references {.allowframebreaks}

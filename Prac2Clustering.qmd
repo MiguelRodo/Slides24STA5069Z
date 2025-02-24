@@ -1,0 +1,346 @@
+---
+title: Clustering
+subtitle: Part One
+date: "2025-02-20"
+format:
+  html:
+    embed-resources: true
+    urlcolor: cyan
+    linkcolor: blue
+    filecolor: magenta
+---
+
+# Introduction
+
+Use the `data_tidy_cell_lineage` dataset for this question, which can be loaded as follows:
+
+```{r}
+#| results: hide
+#| warning: false
+#| message: false
+pkg_vec_cran <- c("remotes", "tibble", "ggplot2", "cowplot")
+for (x in pkg_vec_cran) {
+  if (!requireNamespace(x, quietly = TRUE)) {
+      install.packages(x)
+  }
+}
+library(tibble)
+remotes::install_github("MiguelRodo/DataTidy24STA5069Z@2025")
+data("data_tidy_cell_lineage", package = "DataTidy24STA5069Z")
+data_tidy_cell_lineage
+```
+
+```{r}
+library(ggplot2)
+path_dir_fig <- file.path("_tmp", "fig", "prac2")
+if (dir.exists(path_dir_fig)) {
+  unlink(path_dir_fig, recursive = TRUE)
+}
+dir.create(path_dir_fig, recursive = TRUE)
+```
+
+Note that the package needs to be updated to the latest version to load the data in this manner (via the `data` command rather than reading in a CSV file).
+
+@fig-cell-lineage is an exploratory figure, which shows density plots of the markers across the cells.
+
+```{r}
+#| include: false
+path_cytof_fig <- projr::projr_path_get(
+  "raw-img", "p-density-all-lineage.png"
+)
+```
+
+::: {#fig-cell-lineage}
+
+![](`r path_cytof_fig`)
+
+Density plots of the markers across the cells.
+
+:::
+
+# Question one: hierarchical clustering (11 marks)
+
+a. **R code**: Perform hierarchical clustering on the `data_tidy_cell_lineage` dataset. (1)
+
+```{r}
+dist_mat <- dist(
+    data_tidy_cell_lineage |>
+      dplyr::select(-cell_id),
+    method = "euclidean"
+  )
+hclust_obj <- hclust(dist_mat, method = "ward.D2")
+```
+
+b. **R code + plot + typed response**: Motivate the optimal number of clusters based on the:
+- i. **R code + plot + typed response**: dendrogram. (2)
+
+```{r}
+#| results: hide
+path_dendro <- file.path(
+  "_tmp", "fig", "prac2", "p-q2-b-i.png"
+)
+png(path_dendro, width = 10, height = 10, units = "cm", res = 300)
+plot(hclust_obj)
+dev.off()
+```
+
+```{r, results='asis'}
+knitr::include_graphics(path_dendro)
+```
+
+- ii. **R code + output + typed response**: silhouette statistic. (2)
+
+```{r}
+sil_stat_3 <- cluster::silhouette(
+  cutree(hclust_obj, k = 3),
+  dist(
+    data_tidy_cell_lineage |>
+      dplyr::select(-cell_id),
+    method = "euclidean"
+  )
+)
+sil_stat_4 <- cluster::silhouette(
+  cutree(hclust_obj, k = 4),
+  dist(
+    data_tidy_cell_lineage |>
+      dplyr::select(-cell_id),
+    method = "euclidean"
+  )
+)
+summary(sil_stat_3)
+summary(sil_stat_4)
+```
+
+c. **R code**: Cut the dendrogram to obtain cluster assignments. (1)
+
+```{r}
+clust_vec <- cutree(hclust_obj, k = 3)
+```
+
+d. **R code + plot**: Create a scatter plot of the first two MDS dimensions of the cell lineage data, coloring the points by their cluster assignments. Comment on the results. Below is code to create the MDS assignments. (3)
+
+```{r}
+set.seed(123)
+dist_mat_max <- dist(
+  data_tidy_cell_lineage |>
+    dplyr::select(-cell_id),
+  method = "maximum")
+smacof_mds_obj <- smacof::mds(
+  delta = dist_mat_max, # dissimilarities
+  ndim = 2, # desired dimension of configuration
+  type = "ordinal", # type of dissimilarity
+  init = "torgerson" # initialise with classical scaling
+)
+```
+
+```{r}
+plot_tbl <- data_tidy_cell_lineage |>
+  dplyr::mutate(
+    v1 = smacof_mds_obj[["conf"]][, 1], 
+    v2 = smacof_mds_obj[["conf"]][, 2],
+    cluster = clust_vec
+  )
+p_mds <- ggplot(
+  plot_tbl,
+  aes(x = v1, y = v2, col = cluster)
+) +
+  cowplot::theme_cowplot() +
+  cowplot::background_grid(major = "xy") +
+  theme(
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white")
+  ) +
+  geom_point() +
+  scale_colour_viridis_c() +
+  labs(
+    x = "MDS1",
+    y = "MDS2"
+  ) +
+  theme(legend.title = element_blank())
+path_plot <- file.path(
+  path_dir_fig, "p-q1-d.png"
+)
+cowplot::ggsave2(
+  path_plot,
+  p_mds,
+  width = 10,
+  height = 10,
+  units = "cm"
+)
+```
+
+```{r, results='asis'}
+knitr::include_graphics(path_plot)
+```
+
+e. **Typed response**: Typically, downstream analyses assume that cluster assignments are known with certainty. Comment on the validity of this assumption in the context of the cell lineage data. (2)
+
+It is not clear from the above analysis that there are not more clusters present and some cells may be misclassified ($\checkmark$), in particular cells from the bright yellow cluster.
+Therefore this assumption may typically be false ($\checkmark$), but may be a useful simplification for some analyses.
+
+# Question Two: mixture models and k-means
+
+In this question, you will simulate a two‐cluster dataset with distinct variance structures, then apply model‐based clustering and k-means clustering to evaluate the correct number of clusters.
+
+a. Use the code below to generate 100 observations for Cluster A with a mean vector of (0, 0) and a covariance matrix that has four times the variance along variable 1 as variable 2 (i.e., variance 4 for variable 1 and variance 1 for variable 2).
+  
+```{r}
+set.seed(123)
+n_A <- 100
+mean_A <- c(0, 0)
+# Covariance matrix for Cluster A: Var1 = 2, Var2 = 1
+Sigma_A <- matrix(
+   c(4, 0, 0, 1),
+   nrow = 2
+)
+data_A <- MASS::mvrnorm(n = n_A, mu = mean_A, Sigma = Sigma_A)
+```
+
+b. Now, simulate 100 observations for Cluster B with a different mean (3, 3) and variance of 2 along both variables (no covariance).
+
+```{r}
+n_B <- 100
+mean_B <- c(3, 3)
+# Covariance matrix for Cluster B: unit variance for both variables
+Sigma_B <- diag(2)
+data_B <- MASS::mvrnorm(n = n_B, mu = mean_B, Sigma = Sigma_B)
+```
+
+c. Merge the two clusters into one dataset and create a vector of true cluster labels.
+
+```{r}
+data_sim <- rbind(data_A, data_B)
+true_labels <- factor(rep(c("A", "B"), each = 100))
+```
+
+d. Apply three variants of `mclust::Mclust` to the combined dataset over a range of 1 to 4 clusters:
+   - An overly simple model
+   - A model that is appropriate given the data
+   - An overly flexible model
+
+```{r}
+library(mclust)
+
+# Fit overly simple model (EII)
+settings_vec <- c("EII", "VVI", "VVV")
+mclust_list <- lapply(settings_vec, function(x) {
+   Mclust(data_sim, G = 1:4, modelNames = x)
+}) |>
+   setNames(c("simple", "appropriate", "flexible"))
+```
+
+f. Tabulate the BIC for each model and number of clusters.
+
+```{r}
+#| results: asis
+purrr::map_df(names(mclust_list), function(x) {
+   tibble::tibble(
+      model = x,
+      `One cluster` = mclust_list[[x]]$BIC[1],
+      `Two clusters` = mclust_list[[x]]$BIC[2],
+      `Three clusters` = mclust_list[[x]]$BIC[3],
+      `Four clusters` = mclust_list[[x]]$BIC[4]
+   )
+}) |>
+   dplyr::mutate(model = dplyr::recode(model,
+      simple = "EII",
+      appropriate = "EEI",
+      flexible = "VVV"
+   )) |>
+   dplyr::mutate(
+      across(where(is.numeric), function(x) round(x, 0))
+   ) |>
+   knitr::kable()
+```
+
+e. Plot the classification results for each model.
+
+```{r}
+path_vec <- NULL
+for (i in seq_along(mclust_list)) {
+   path_p <- file.path(
+     path_dir_fig, paste0("p-2b-", names(mclust_list)[i], ".png")
+   )
+   path_vec <- c(path_vec, path_p)
+   png(path_p, units = "cm", width = 8, height = 8, res = 300)
+   plot(mclust_list[[i]], what = "classification")
+   dev.off()
+}
+```
+
+::: {#fig-2b}
+
+![EII (simple)](`r path_vec[[1]]`)
+
+![EEI (appropriate)](`r path_vec[[2]]`)
+
+![VVV (flexible)](`r path_vec[[3]]`)
+
+Classification results for each model.
+
+:::
+
+g. Discuss the results.
+
+The simple model split the long cluster into two clusters, whilst the appropriate model (diagonal, varying volume and shape) identified the two clusters correctly.
+The flexible model (ellipsoidal, varying volume and shape) also identified the two clusters correctly, and actually had a better BIC.
+
+h. Apply k-means clustering to the combined dataset for k = 1 to 4 clusters.
+
+```{r}
+kmeans_list <- purrr::map(1:4, function(k) {
+   kmeans(data_sim |> as.matrix(), centers = k)
+})
+```
+
+i. Plot the gap statistic, and report whether it identifies two clusters. 
+
+```{r}
+gap_obj <- cluster::clusGap(
+   data_sim |> as.matrix(),
+   FUN = kmeans,
+   nstart = 25,
+   K.max = 4,
+   B = 100
+)
+```
+
+j. Plot the classification results for k-means clustering.
+
+```{r}
+gap_tbl <-  tibble(
+   k = 1:4,
+   gap = gap_obj$Tab[, "gap"],
+   se = gap_obj$Tab[, "SE.sim"]
+)
+p <- ggplot(
+   gap_tbl, aes(x = k, y = gap)
+   ) +
+   geom_point() +
+   geom_errorbar(aes(ymin = gap - se, ymax = gap + se)) +
+   cowplot::theme_cowplot() +
+   cowplot::background_grid(major = "y") +
+   theme(
+      plot.background = element_rect(fill = "white")
+   ) +
+   labs(x = "Number of clusters (k)", y = "Gap statistic")
+path_p_gap <- file.path(
+   path_dir_fig, "p-2c-gap.png"
+)
+ggsave(path_p_gap, p, width = 10, height = 10, units = "cm")
+```
+
+::: {#fig-2c}
+
+![](`r path_p_gap`)
+
+Gap statistic for k-means clustering.
+
+:::
+
+k. Discuss the results for k-means, and compare its performance to model-based clustering.
+
+K-means clustering identified two clusters, as did the overly-simple model.
+Only models that allowed for varying volume and shape (EEI and VVV) correctly identified the two clusters.
+
+

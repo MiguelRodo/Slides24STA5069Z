@@ -1,0 +1,163 @@
+---
+title: Lecture 3 - Clustering
+subtitle: How to choose the number of clusters
+bibliography: zotero.bib
+format:
+  html:
+    self-contained: true
+    toc: true
+    toc-depth: 3
+---
+
+# Choosing the right number of clusters
+
+## 1. Overview
+
+### This is a hard problem
+
+```{r}
+#| include: false
+path_img_finite_mixture <- projr::projr_path_get(
+  "raw-img", "cai_etal21-post_dbn_n_comp.png"
+)
+```
+
+::: {#fig-finite-mixture}
+
+![](`r path_img_finite_mixture`)
+
+Posterior density of number of components in a finite mixture model (Cai et al., 2021)
+
+:::
+
+@cai_etal21 show that, under model misspecification, the posterior density of the number of components in a mixture model *diverges*: "the posterior probability of any particular finite number of components converges to 0 in the limit of infinite data."
+
+## 1. Don’t choose $k$
+
+- Key idea: Instead of selecting $k$, use all clusters at all levels and interpret results based on context.
+- Example: Hierarchical clustering
+  - Instead of picking a fixed $k$, analyze different levels of the dendrogram.
+  - Works well when there is no clear natural cluster count but hierarchical relationships matter.
+  - Example: CITRUS (flow cytometry clustering) keeps all clusters and does post hoc analysis.
+---
+
+## 2. Automatically Choose $k$
+
+Here, the algorithm itself determines the number of clusters without requiring a fixed $k$ upfront.
+
+### (a) Clustering algorithm chooses number of clusters dynamically
+
+- Search and select algorithms define a large number of clusters, and then choose a non-overlapping subset that is "best".
+
+#### Examples
+
+- DBSCAN (Density-Based Spatial Clustering of Applications with Noise)
+  - Finds dense regions in the data.
+  - Automatically determines the number of clusters based on density.
+  - Can identify noise points as outliers.
+- HDBSCAN (Hierarchical DBSCAN [@campello_etal13])
+  - Develops a minimum-spanning tree of clusters.
+  - Sequentially removes the weakest links between vertices until no clusters remain.
+  - Mutually-exclusive clusters with maximum stability are selected
+- FAUST (Full Annotation Using Shape-Constrained Trees)
+  - Clusters that are unimodal along each dimension are created.
+  - Mutually-exclusive clusters with maximum "normality" are selected.
+
+### (b) Fit for various $k$, and choose $k$ such that a quality criterion is optimized
+
+- Options:
+  - Average silhouette width
+  - Gap statistic
+  - Agglomerative coefficient
+  - Average stability
+
+## 3. Prune or merge clusters
+
+- Calculate per-cluster quality metrics.
+- If pruning:
+  - Remove all clusters that are below a certain threshold, e.g. silhouette width, cluster stability.
+- If merging:
+  - Merge clusters that are:
+    - too similar, e.g. silhouette width, or
+    - too easily confused, e.g. cluster stability or
+    - are not clearly separate modes (e.g. after fitting a Gaussian mixture model).
+
+## 4. Apply what has been shown to work well in your field, for your application
+
+
+# Cluster stability
+
+Below is a formal description of the algorithm along with a brief motivation and an example R implementation.
+
+
+### Motivation
+
+Cluster stability aims to quantify the reproducibility of a clustering solution under slight perturbations of the data. The idea is that if a cluster is “stable,” then even when the data are resampled or perturbed, the same set of points will tend to be grouped together. One way to measure this is to compare the original clusters to those obtained on perturbed datasets using the Jaccard coefficient. A high average Jaccard similarity indicates that clusters are robust, whereas low similarity suggests that the grouping may be sensitive to changes in the data.
+
+### Formal Algorithm
+
+1. **Obtain the Original Clustering:**
+
+   - Let $X$ be your original dataset and let
+     $$
+     C = \{C_1, C_2, \dots, C_k\}
+     $$
+     be the clustering solution (with $C_j \subset X$ for each $j$) obtained by your chosen clustering algorithm.
+
+2. **Generate Perturbed Datasets:**
+
+   - For $b = 1, \dots, B$, create perturbed versions $X^{(b)}$ of the dataset (e.g., by adding noise or using bootstrap resampling).
+
+3. **Re-cluster the Perturbed Data:**
+
+   - For each perturbed dataset $X^{(b)}$, run the clustering algorithm to obtain the clustering
+     $$
+     C^{(b)} = \{C^{(b)}_1, C^{(b)}_2, \dots, C^{(b)}_{k_b}\}.
+     $$
+
+4. **Compute the Jaccard Coefficient for Each Original Cluster:**
+
+   - For each cluster $C_j$ in the original clustering and for each perturbed clustering $C^{(b)}$, compute:
+   
+     $$
+     J(C_j, C^{(b)}) = \max_{l} \frac{|C_j \cap C^{(b)}_l|}{|C_j \cup C^{(b)}_l|},
+     $$
+
+     where the maximum is taken over all clusters $C^{(b)}_l$ in the $b$th perturbed clustering. This yields the best match for $C_j$ in $X^{(b)}$.
+
+5. **Average Over Perturbations:**
+
+   - Define the stability of cluster $C_j$ as:
+     $$
+     S(C_j) = \frac{1}{B} \sum_{b=1}^B J(C_j, C^{(b)}).
+     $$
+
+6. **Overall Stability:**
+
+   - Finally, an overall stability measure for the clustering solution can be obtained by averaging:
+     $$
+     S = \frac{1}{k} \sum_{j=1}^{k} S(C_j).
+     $$
+
+### R Implementation
+
+```{r}
+# Load the fpc package
+library(fpc)
+
+# Generate example data (two clusters)
+set.seed(123)
+data_A <- MASS::mvrnorm(n = 100, mu = c(0, 0), Sigma = diag(2))
+data_B <- MASS::mvrnorm(n = 100, mu = c(3, 3), Sigma = diag(2))
+data_sim <- rbind(data_A, data_B)
+
+# Use clusterboot() with kmeans as the clustering method.
+# Here, kmeansCBI is a wrapper provided by fpc.
+# B specifies the number of bootstrap replications.
+cb <- clusterboot(data_sim, clustermethod = kmeansCBI, k = 2, B = 100)
+
+# The bootmean element contains the average Jaccard coefficient (stability)
+# for each cluster.
+print(cb$bootmean)
+
+```

@@ -1,0 +1,452 @@
+---
+title: Lecture 3 - Clustering
+subtitle: OPTICS
+bibliography: zotero.bib
+format:
+  html:
+    self-contained: true
+    toc: true
+    toc-depth: 3
+---
+
+```{r}
+#| include: false
+library(mclust)
+library(ggplot2)
+library(tibble)
+library(dbscan)
+```
+
+# OPTICS: Ordering Points To Identify the Clustering Structure
+
+## 1. Overview
+
+- Definition:  
+  OPTICS (Ordering Points To Identify the Clustering Structure) is a density-based clustering algorithm designed to handle clusters of varying densities.
+  Unlike DBSCAN, which produces a flat partition, OPTICS creates an ordering of the data points along with their reachability distances.
+  This ordering can then be visualized as a reachability plot.
+  From here, clusters can be extracted based on the structure of the plot.
+
+- Key idea:  
+  Instead of committing to a single global density threshold, OPTICS records the structure of the data by computing for each point a reachability distance that reflects how it can be “reached” from a neighboring core point. Valleys in the reachability plot indicate dense clusters, and peaks mark boundaries between clusters.
+
+- Main reference:  
+  Ankerst, M., Brecheisen, M. M., Kriegel, H. P., Sander, J., & Xu, X. (1999). *OPTICS: Ordering Points To Identify the Clustering Structure*. SIGMOD Record, 28(2), 49–60.  @ankerst_etal99
+
+## 2. Key Concepts
+
+```{r}
+#| include: false
+path_img_optics_reachability <- projr::projr_path_get(
+  "raw-img", "ankerst_etal99-reachability.png"
+)
+```
+
+::: {#fig-optics-reachability}
+
+![](`r path_img_optics_reachability`)
+
+Core distance and reachability distance [@ankerst_etal99]
+:::
+
+### 2.1 Core distance
+
+- For each point, the core distance is the minimum radius required to include at least `minPts` neighbors.
+- If a point does not have enough neighbors, its core distance is undefined.
+
+### 2.2 Reachability distance
+
+- The reachability distance of a point $p$ with respect to a core point $o$ is defined as:
+  
+  $$
+  r(p, o) = \max\bigl(\text{core-distance}(o),\, \text{distance}(o, p)\bigr)
+  $$
+  
+- This measure shows how “reachable” $p$ is from $o$.
+
+### 2.3 Reachability plot and cluster extraction
+
+```{r}
+#| include: false
+path_img_optics_reachability_plot <- projr::projr_path_get(
+  "raw-img", "ankerst_etal99-reachability-plot.png"
+)
+```
+
+::: {#fig-optics-reachability-plot}
+![](`r path_img_optics_reachability_plot`)
+
+Reachability plot [@ankerst_etal99]
+:::
+
+- The OPTICS algorithm outputs an ordering of the data along with corresponding reachability distances.
+- When plotted, the reachability plot shows valleys (dense regions) and peaks (gaps between clusters).
+- Cluster extraction can be performed using methods such as the Xi method, which identifies steep changes in the plot to delimit clusters.
+
+## 3. Applied to Data in R
+
+```{r}
+#| include: false
+set.seed(123)
+n_A <- 100
+mean_A <- c(0, 0)
+Sigma_A <- matrix(c(4, 0, 0, 1), nrow = 2)
+data_A <- MASS::mvrnorm(n = n_A, mu = mean_A, Sigma = Sigma_A)
+n_B <- 100
+mean_B <- c(3, 3)
+Sigma_B <- diag(2)
+data_B <- MASS::mvrnorm(n = n_B, mu = mean_B, Sigma = Sigma_B)
+data_sim <- rbind(data_A, data_B)
+```
+
+### 3.1 Running OPTICS
+
+```{r}
+# Run OPTICS with minPts = 10; eps is set high to include all relevant neighbors.
+opt <- dbscan::optics(data_sim, minPts = 10, eps = 1.5)
+```
+
+### 3.2 Visualizing the Reachability Plot
+
+```{r}
+path_p_opt <- projr::projr_path_get(
+  "cache", "notes-l3-cluster", "optics-reachability-plot.png"
+)
+png(path_p_opt, units = "cm", width = 10, height = 7, res = 300)
+plot(opt)
+dev.off()
+```
+
+This plot displays the reachability distance of each point (in the order they were processed).
+Valleys indicate regions of high density that can be interpreted as clusters.
+
+### 3.3 Extracting clusters using the DBSCAN method
+
+```{r}
+# Extract clusters using the Xi method with a specified xi threshold.
+opt_clusters_dbscan <- dbscan::extractDBSCAN(opt, eps_cl = 0.6) 
+```
+
+```{r}
+#| include: false
+path_p_reachability_x_dbscan <- projr::projr_path_get(
+  "cache", "notes-l3-cluster",
+  "p-reachability-x-dbscan.png"
+)
+plot_tbl <- tibble(
+  order = seq_along(opt_clusters_dbscan$reachdist),
+  reachability = opt_clusters_dbscan$reachdist[opt_clusters_dbscan$order],
+  cluster = as.character(opt_clusters_dbscan$cluster[opt_clusters_dbscan$order])
+)
+
+# plot a bar plot of reachability
+# against the order
+clust_col_vec <- RColorBrewer::brewer.pal(4, "Set1") |>
+  setNames(
+    nm = as.character(0:3)
+  )
+p <- ggplot(
+  plot_tbl,
+  aes(x = order, y = reachability, fill = cluster)
+) +
+  geom_bar(stat = "identity") +
+  cowplot::theme_cowplot() +
+  cowplot::background_grid(major = "xy") +
+  theme(
+    plot.background = element_rect(fill = "white")
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank()
+  ) +
+  scale_fill_manual(
+    values = clust_col_vec
+  ) +
+  labs(x = "Order", y = "Reachability")
+ggsave(
+  path_p_reachability_x_dbscan,
+  plot = p,
+  width = 8, height = 10, units = "cm", dpi = 300
+)
+```
+
+::: {#fig-optics-reachability-x}
+
+![](`r path_p_reachability_x_dbscan`)
+
+Reachability plot with DBSCAN method cluster extraction
+:::
+
+```{r}
+#| include: false
+path_p_optics_dbscan <- projr::projr_path_get(
+  "cache", "notes-l3-cluster",
+  "p-optics-dbscan.png"
+)
+plot_tbl <- data_sim |>
+  as_tibble() 
+colnames(plot_tbl) <- c("x", "y")
+plot_tbl$cluster <- as.character(opt_clusters_dbscan$cluster)
+
+p <- ggplot(
+  plot_tbl,
+  aes(x = x, y = y, color = cluster)
+) +
+  geom_point() +
+  cowplot::theme_cowplot() +
+  cowplot::background_grid(major = "xy") +
+  theme(
+    plot.background = element_rect(fill = "white")
+  ) +
+  coord_equal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank()
+  ) +
+  scale_colour_manual(
+    values = clust_col_vec
+  )
+ggsave(
+  path_p_optics_dbscan,
+  plot = p,
+  width = 8, height = 8, units = "cm", dpi = 300
+)
+```
+
+::: {#fig-optics-xi}
+
+![](`r path_p_optics_dbscan`)
+
+OPTICS clustering using the DBSCAN method of noiseless data
+:::
+
+The extracted clusters (with labels) will correspond to valleys in the reachability plot as identified by the steepness threshold $\xi$.
+
+### 3.3 Extracting clusters using the Xi method
+
+```{r}
+# Extract clusters using the Xi method with a specified xi threshold.
+opt_clusters <- dbscan::extractXi(opt, xi = 0.04) # 0.04 caused the fuss
+```
+
+```{r}
+#| include: false
+path_p_reachability_x <- projr::projr_path_get(
+  "cache", "notes-l3-cluster",
+  "p-reachability-x.png"
+)
+plot_tbl <- tibble(
+  order = seq_along(opt_clusters$reachdist),
+  reachability = opt_clusters$reachdist[opt_clusters$order],
+  cluster = as.character(opt_clusters$cluster[opt_clusters$order])
+)
+vline_tbl <- opt_clusters$clusters_xi |>
+  as_tibble() |>
+  tidyr::pivot_longer(
+    cols = -cluster_id,
+    names_to = "cluster",
+    values_to = "order"
+  ) |>
+  dplyr::mutate(
+    cluster_id = as.character(cluster_id)
+  )
+# plot a bar plot of reachability
+# against the order
+clust_col_vec <- RColorBrewer::brewer.pal(4, "Set1") |>
+  setNames(
+    nm = as.character(0:3)
+  )
+p <- ggplot(
+  plot_tbl,
+  aes(x = order, y = reachability, fill = cluster)
+) +
+  geom_bar(stat = "identity") +
+  cowplot::theme_cowplot() +
+  cowplot::background_grid(major = "xy") +
+  theme(
+    plot.background = element_rect(fill = "white")
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank()
+  ) +
+  geom_vline(
+    data = vline_tbl,
+    aes(xintercept = order, color = cluster_id),
+    linetype = "dashed",
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(
+    values = clust_col_vec
+  ) +
+  scale_color_manual(
+    values = clust_col_vec
+  ) +
+  labs(x = "Order", y = "Reachability")
+ggsave(
+  path_p_reachability_x,
+  plot = p,
+  width = 8, height = 10, units = "cm", dpi = 300
+)
+```
+
+::: {#fig-optics-reachability-x}
+
+![](`r path_p_reachability_x`)
+
+Reachability plot with Xi method cluster extraction
+:::
+
+```{r}
+#| include: false
+path_p_optics_xi <- projr::projr_path_get(
+  "cache", "notes-l3-cluster",
+  "p-optics-xi.png"
+)
+plot_tbl <- data_sim |>
+  as_tibble() 
+colnames(plot_tbl) <- c("x", "y")
+plot_tbl$cluster <- as.character(opt_clusters$cluster)
+
+p <- ggplot(
+  plot_tbl,
+  aes(x = x, y = y, color = cluster)
+) +
+  geom_point() +
+  cowplot::theme_cowplot() +
+  cowplot::background_grid(major = "xy") +
+  theme(
+    plot.background = element_rect(fill = "white")
+  ) +
+  coord_equal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank()
+  ) +
+  scale_colour_manual(
+    values = clust_col_vec
+  )
+ggsave(
+  path_p_optics_xi,
+  plot = p,
+  width = 8, height = 8, units = "cm", dpi = 300
+)
+```
+
+::: {#fig-optics-xi}
+
+![](`r path_p_optics_xi`)
+
+OPTICS clustering using the XI method of noiseless data
+:::
+
+The extracted clusters (with labels) will correspond to valleys in the reachability plot as identified by the steepness threshold $\xi$.
+
+### 3.4 Comparison with hierarchical clustering with single linkage
+
+Single linkage hierarchical clustering gives less obvious clusters, likely due to the lack of penalisation of isolated points.
+
+```{r}
+#| include: false
+dendro <- hclust(
+  dist(data_sim),
+  method = "single"
+)
+path_p_dendro <- projr::projr_path_get(
+  "cache", "notes-l3-cluster",
+  "p-optics-dendro.png"
+)
+png(path_p_dendro, units = "cm", width = 20, height = 20, res = 300)
+plot(dendro)
+dev.off()
+```
+
+::: {#fig-optics-dendro}
+
+![](`r path_p_dendro`)
+
+Dendrogram of single linkage hierarchical clustering
+:::
+
+However, the actual clustering result is probably the best we've had so far - if we label the first two clusters only and regard all others as noise (there were 20 clusters). 
+
+```{r}
+#| include: false
+path_p_points_dendro_points <- projr::projr_path_get(
+  "cache", "notes-l3-cluster",
+  "p-optics-points-dendro.png"
+)
+plot_tbl <- data_sim |>
+  as_tibble()
+colnames(plot_tbl) <- c("x", "y")
+clust_vec <- cutree(dendro, h = 0.59)
+plot_tbl$cluster <- as.character(clust_vec)
+p <- ggplot(
+  plot_tbl,
+  aes(x = x, y = y, color = cluster)
+) +
+  geom_point() +
+  cowplot::theme_cowplot() +
+  cowplot::background_grid(major = "xy") +
+  theme(
+    plot.background = element_rect(fill = "white")
+  ) +
+  coord_equal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank()
+  ) +
+  scale_colour_manual(
+    values = clust_col_vec[-length(clust_col_vec)]
+  )
+ggsave(
+  path_p_points_dendro_points,
+  plot = p,
+  width = 8, height = 8, units = "cm", dpi = 300
+)
+```
+
+::: {#fig-optics-points-dendro}
+
+![](`r path_p_points_dendro_points`)
+
+Classification using single linkage hierarchical clustering
+:::
+
+## 4. Parameters and Their Selection
+
+### 4.1 minPts
+
+- Definition:  
+  The minimum number of points required to consider a point as a core point.  
+- Selection:  
+  Often set based on the dataset’s dimensionality (e.g., 10 for 2D data).
+  Typically set higher than for DBSCAN to ensure robustness against noise.
+
+### 4.2 eps
+
+- Definition:  
+  In OPTICS, `eps` is used as the maximum radius to search for neighbors.  
+- Selection:  
+  It should be large enough so that all points that might be reachable from any core point are considered.
+
+### 4.3 Xi ($\xi$)
+
+- Definition:  
+  The parameter $\xi$ defines the relative steepness threshold in the reachability plot to detect significant changes (cluster boundaries).  
+- Selection:  
+  A smaller $\xi$ value (e.g., 0.05) yields more conservative cluster extraction, while larger values may merge clusters.
+
+## 5. Advantages and Limitations
+
+### 5.1 Advantages
+
+- Handles varying densities:  
+  Clusters of different densities can be identified (if using the Xi method).
+- Noise detection:  
+  Outliers appear as isolated points with high reachability distances.
+
+### 5.2 Limitations
+
+- Computational Cost:  
+  OPTICS is generally more computationally intensive than DBSCAN because it computes a complete ordering of the data.

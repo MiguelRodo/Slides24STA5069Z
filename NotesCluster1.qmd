@@ -1,0 +1,114 @@
+---
+title: Lecture two - clustering part one
+subtitle: Additional notes
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 3
+---
+
+# Choosing the Number of Clusters via the Gap Statistic (Log-Scale Version)
+
+Let $\{x_1, x_2, \ldots, x_n\}$ be $n$ observations in $\mathbb{R}^p$. 
+Suppose we partition them into $k$ clusters $S_1, S_2, \ldots, S_k$. 
+A commonly used measure of within-cluster dispersion is
+
+$$
+W_k 
+\;=\; 
+\sum_{r=1}^k 
+\frac{1}{2\,n_r} 
+\sum_{\substack{x,\,x' \in S_r \\ x \neq x'}} 
+\| x - x' \|^2,
+$$
+
+where $n_r = |S_r|$ is the number of points in cluster $S_r$.
+
+## Reference Distribution and Gap Statistic
+
+To assess how large or small $W_k$ is relative to chance, we compare $\log(W_k)$ with its expectation under a **reference (null) distribution** that preserves some aspects of the original data (e.g., bounding box or principal components). The procedure is:
+
+\begin{enumerate}
+  \item \textbf{Generate $B$ reference datasets} (denoted $X^{*(b)}$ for $b=1,\dots,B$) from the chosen null distribution. Each dataset has the same number of points $n$ in $\mathbb{R}^p$ as the original dataset.
+  \item \textbf{Cluster each reference dataset} into $k$ clusters (using the same clustering algorithm), yielding $W_k^{*(b)}$ for each $b$.
+  \item \textbf{Compute the average of the log-dispersion}:
+  $$
+  \overline{\log(W_k^*)}
+  \;=\; 
+  \frac{1}{B} \sum_{b=1}^B \log\bigl(W_k^{*(b)}\bigr).
+  $$
+  \item \textbf{Define the Gap statistic}:
+  $$
+  \mathrm{Gap}(k)
+  \;=\;
+  \overline{\log(W_k^*)}
+  \;-\;
+  \log\bigl(W_k\bigr).
+  $$
+\end{enumerate}
+
+Hence, $\mathrm{Gap}(k)$ measures how far the observed within-cluster dispersion $\log(W_k)$ is below the expected dispersion under the null model. 
+A larger $\mathrm{Gap}(k)$ suggests that the observed clustering structure is stronger than what would be expected by chance.
+
+### Selecting $k$
+
+To choose the optimal number of clusters $\hat{k}$, one common rule is:
+$$
+\hat{k}
+\;=\;
+\min \Bigl\{
+k : \mathrm{Gap}(k) \;\ge\; \mathrm{Gap}(k+1) \;-\; s_{k+1}
+\Bigr\},
+$$
+
+where $s_{k+1}$ is a standard error term for $\mathrm{Gap}(k+1)$, often estimated by:
+
+$$
+s_{k+1}
+\;=\;
+\sqrt{
+  1 + \frac{1}{B}
+}
+\;
+\sqrt{
+  \frac{1}{B}
+  \sum_{b=1}^B
+  \Bigl[
+    \log\bigl(W_{k+1}^{*(b)}\bigr)
+    \;-\;
+    \overline{\log(W_{k+1}^*)}
+  \Bigr]^2
+}.
+$$
+
+In practice, one computes $\mathrm{Gap}(k)$ for a range of $k$ values (e.g., $k = 1,2,\dots,K_{\max}$) and then applies this rule or simply picks the $k$ that maximizes $\mathrm{Gap}(k)$ if no clear ``1-standard-error'' gap exists.
+
+## Explanation of the Key Components
+
+1. **Within-Cluster Dispersion, $W_k$**  
+   - For each cluster $S_r$, we measure the sum of squared distances among all pairs of points in that cluster.  
+   - Summing over all clusters gives a measure of how “spread out” the data are within each cluster, then aggregated for all $k$ clusters.
+
+2. **Logarithmic Scale**  
+   - The Gap statistic is defined in terms of $\log(W_k)$ rather than $W_k$ directly.  
+   - Taking logs often stabilizes variance and makes the measure more robust.
+
+3. **Reference (Null) Distribution**  
+   - Typically, we sample points uniformly within the bounding box of the original data or using other schemes that preserve overall geometry.  
+   - We then re-run the clustering procedure on these “null” datasets to see what typical $\log(W_k^*)$ values might be by chance.
+
+4. **Gap Calculation**  
+
+   $$
+   \mathrm{Gap}(k)
+   \;=\;
+   \overline{\log(W_k^*)}
+   \;-\;
+   \log\bigl(W_k\bigr).
+   $$
+   - A **large positive** gap indicates that the actual clustering yields a smaller within-cluster dispersion (on the log scale) than what would be expected from a random configuration of points.
+
+5. **Choosing $\hat{k}$**  
+   - You can pick the $k$ that **maximizes** $\mathrm{Gap}(k)$.  
+   - Or use the **1-SE rule**: pick the smallest $k$ such that $\mathrm{Gap}(k) \geq \mathrm{Gap}(k+1) - s_{k+1}$. 

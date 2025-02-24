@@ -7,13 +7,6 @@ _projr-local.yml
 _environment.local
 SCRATCH.R
 
-# Start of projr section: do not edit by hand (until `# End of projr section`)
-_data_raw/img/**
-_tmp/**
-_output/**
-docs/**
-_data_raw/other/**
-# End of projr section
 
 Slides24STA5069ZL1MDS_files/figure-beamer/unnamed-chunk-11-1.pdf
 
@@ -39,4 +32,30 @@ Slides24STA5069ZL4ClusterAnalysis.vrb
 
 
 /.quarto/
+
+# Start of projr section: do not edit by hand (update with projr_ignore_auto())
+_reference/**
+_raw/img/**
+_raw/data/**
+_raw/other/**
+_tmp/**
+_output/**
+docs/**
+Rplots.pdf
+.quarto/**
+NotesCluster1_files/**
+NotesCluster1.html/**
+NotesL3Cluster1DBSCAN_files/**
+NotesL3Cluster1DBSCAN.html/**
+NotesL3Cluster2OPTICS_files/**
+NotesL3Cluster2OPTICS.html/**
+NotesL3Cluster3Graph_files/**
+NotesL3Cluster3Graph.html/**
+NotesL3Cluster4ChoosingK_files/**
+NotesL3Cluster4ChoosingK.html/**
+Prac2Clustering_files/**
+Prac2Clustering.html/**
+Prac2ClusteringQuestions.pdf/**
+Slides24STA5069ZL1MDS.pdf/**
+# End of projr section
 

@@ -1,0 +1,91 @@
+---
+title: Clustering
+subtitle: Part One
+date: "2025-02-20"
+format:
+  pdf:
+    embed-resources: true
+    urlcolor: cyan
+    linkcolor: blue
+    filecolor: magenta
+---
+
+# Introduction
+
+The `data_tidy_cell_lineage` dataset contains measurements of various cell markers collected from cytometry experiments. These markers are used to classify the cells into different lineages. In this assignment, you will explore clustering techniques to identify sub-populations of cells and compare different clustering methods.
+
+The dataset can be loaded as follows:
+
+```{r}
+#| results: hide
+#| warning: false
+#| message: false
+pkg_vec_cran <- c("remotes", "tibble", "ggplot2", "cowplot")
+for (x in pkg_vec_cran) {
+  if (!requireNamespace(x, quietly = TRUE)) {
+      install.packages(x)
+  }
+}
+library(tibble)
+remotes::install_github("MiguelRodo/DataTidy24STA5069Z@2025")
+data("data_tidy_cell_lineage", package = "DataTidy24STA5069Z")
+data_tidy_cell_lineage
+```
+
+@fig-cell-lineage is an exploratory figure that displays density plots of the cell markers.
+
+```{r}
+#| include: false
+path_cytof_fig <- projr::projr_path_get("raw-img", "p-density-all-lineage.png")
+```
+
+::: {#fig-cell-lineage}
+![](`r path_cytof_fig`)
+
+*Density plots of the markers across the cells.*
+:::
+
+# Questions
+
+## Question One: Hierarchical Clustering (11 marks)
+
+a. **R code**: Perform hierarchical clustering on the `data_tidy_cell_lineage` dataset. (1 mark)
+b. **R code + plot + typed response**: Motivate the optimal number of clusters based on:
+   - **i. the dendrogram** (2 marks)
+   - **ii. the silhouette statistic** (2 marks)
+c. **R code**: Cut the dendrogram to obtain cluster assignments. (1 mark)
+d. **R code + plot**: Create a scatter plot of the first two MDS dimensions of the cell lineage data, coloring the points by their cluster assignments. Comment on the results. (3 marks)
+e. **Typed response**: Typically, downstream analyses assume that cluster assignments are known with certainty. Comment on the validity of this assumption in the context of the cell lineage data. (2 marks)
+
+## Question Two: Mixture Models and K-Means
+
+a. Use the following code to simulate 100 observations for Cluster A with a mean vector of (0, 0) and a covariance matrix having variance 4 for variable 1 and variance 1 for variable 2.
+
+```{r}
+set.seed(123)
+n_A <- 100
+mean_A <- c(0, 0)
+Sigma_A <- matrix(c(4, 0, 0, 1), nrow = 2)
+data_A <- MASS::mvrnorm(n = n_A, mu = mean_A, Sigma = Sigma_A)
+```
+
+b. Now, simulate 100 observations for Cluster B with a mean vector of (3, 3) and variance of 2 along both variables.
+c. Merge the two clusters into one dataset and create a vector of true cluster labels.
+d. Apply three variants of `mclust::Mclust` to the combined dataset over a range of 1 to 4 clusters:
+   - An overly simple model,
+   - A model that is appropriate given the data,
+   - An overly flexible model.
+e. Tabulate the BIC for each model and number of clusters.
+f. Plot the classification results for each model.
+g. Discuss the results from model-based clustering. (Consider how the simple, appropriate, and flexible models perform.)  
+h. Apply k-means clustering to the combined dataset for k = 1 to 4 clusters.
+i. Plot the gap statistic, and report whether it identifies two clusters.
+j. Plot the classification results for k-means clustering.
+k. Discuss the results for k-means clustering and compare its performance to model-based clustering. Suggest which mixture model $k$-means is most similar to.
+
+## Question Three: PAM and CLARA
+
+a. Apply PAM clustering to the `data_tidy_cell_lineage` dataset for k = 1 to 4 clusters.
+b. Write a function to implement CLARA, using the `cluster::pam` function as a subroutine.
+c. Compare how long it takes to fit your CLARA implementation to the `cluster::clara` function.
+d. Insert outliers into the `data_tidy_cell_lineage` dataset and compare the performance of `pam` to `k-means`.
