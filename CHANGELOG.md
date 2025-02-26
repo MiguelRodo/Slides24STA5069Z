@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Patch (v3.6.1): Miguel Rodo (2025-02-26 13:14:18)
+  - Remove empty qmd's
 - *Minor* (v3.6.0): Miguel Rodo (2025-02-26 13:09:31)
   - Add week 3 pracs
 

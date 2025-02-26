@@ -7,7 +7,7 @@
   "codeRepository": "https://github.com/MiguelRodo/Slides24STA5069Z/",
   "issueTracker": "https://github.com/MiguelRodo/Slides24STA5069Z/issues",
   "license": "{{ License }}",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -33,7 +33,7 @@
   "softwareRequirements": {
     "SystemRequirements": null
   },
-  "fileSize": "1549.601KB",
+  "fileSize": "1549.59KB",
   "citation": [
     {
       "@type": "CreativeWork",

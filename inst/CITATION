@@ -8,4 +8,4 @@ bibentry(bibtype = "Misc",
                          email = "miguel.rodo@uct.ac.za"),
          url = "https://github.com/MiguelRodo/Slides24STA5069Z/#readme",
          abstract = "Slides for 2024 STA5069Z MSc multivariate statistics course",
-         version = "3.6.0")
+         version = "3.6.1")
