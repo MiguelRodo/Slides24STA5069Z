@@ -7,7 +7,7 @@ cff-version: 1.2.0
 message: 'To cite package "Slides24STA5069Z" in publications use:'
 type: software
 title: 'Slides24STA5069Z: Slides for 2024 STA5069Z MSc multivariate statistics course'
-version: 3.5.0
+version: 3.6.0
 abstract: Slides for 2024 STA5069Z MSc multivariate statistics course
 authors:
 - family-names: Rodo
@@ -22,7 +22,7 @@ preferred-citation:
     email: miguel.rodo@uct.ac.za
   url: https://github.com/MiguelRodo/Slides24STA5069Z/#readme
   abstract: Slides for 2024 STA5069Z MSc multivariate statistics course
-  version: 0.0.0-1
+  version: 3.5.0
 repository-code: https://github.com/MiguelRodo/Slides24STA5069Z
 url: https://github.com/MiguelRodo/Slides24STA5069Z/#readme
 contact:

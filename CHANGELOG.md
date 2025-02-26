@@ -1,5 +1,8 @@
 # CHANGELOG
 
+- *Minor* (v3.6.0): Miguel Rodo (2025-02-26 13:09:31)
+  - Add week 3 pracs
+
 - *Minor* (v3.5.0): Miguel Rodo (2025-02-24 13:29:50)
   - Add lecture 3 content
 
