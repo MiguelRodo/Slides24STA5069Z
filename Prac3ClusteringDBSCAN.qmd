@@ -1,0 +1,77 @@
+---
+title: "Prac: DBSCAN Parameter Exploration"
+subtitle: "Exploring eps and minPts for Density-Based Clustering"
+date: "2025-02-20"
+format:
+  html:
+    self-contained: true
+toc: true
+toc-depth: 2
+---
+
+## Overview
+
+In this practical, you will use the DBSCAN algorithm (from the `dbscan` R package) to investigate how its parameters—*eps* (the maximum neighborhood radius) and *minPts* (the minimum number of points to form a core point) — affect the clustering outcome. You will:
+
+- Generate or load a dataset.
+- Create a k‑nearest neighbor (k-NN) distance plot to help choose an appropriate *eps*.
+- Experiment with different *minPts* values.
+- Visualize the clustering results and discuss the impact of your parameter choices.
+- Optionally, add outliers to the dataset and observe how DBSCAN handles them.
+
+## Instructions
+
+1. **Data Preparation:**
+   Load or simulate a 2D dataset (for example, a mixture of two Gaussian clusters).
+
+2. **Parameter Selection:**  
+   - Use a k‑NN distance plot (with, e.g., `kNNdistplot()`) to identify a “knee” in the plot that will guide your choice of *eps*.
+   - Experiment with *minPts* values (e.g., 5, 10, 15) and record the effect on cluster assignments.
+
+3. **Clustering and Visualization:**  
+   - Apply DBSCAN using your chosen parameters.
+   - Plot the results, color-coding the clusters and highlighting any noise points.
+   - Add a few outliers manually and re-run DBSCAN to see how noise is handled.
+
+4. **Discussion:**  
+   Write a brief summary (in text) on how parameter choices influence DBSCAN’s performance.
+
+```{r}
+#| include: false
+#| eval: false
+#| 
+# Load required packages
+library(dbscan)
+library(ggplot2)
+library(tibble)
+
+# Simulate a dataset with two clusters
+set.seed(123)
+n <- 200
+data <- rbind(
+  MASS::mvrnorm(n = n/2, mu = c(0, 0), Sigma = diag(2)),
+  MASS::mvrnorm(n = n/2, mu = c(3, 3), Sigma = diag(2))
+)
+
+# Plot k-NN distances for k = 10
+kNNdistplot(data, k = 10)
+abline(h = 0.8, col = "red", lty = 2)  # example threshold for eps
+
+# Run DBSCAN with chosen parameters
+db_res <- dbscan(data, eps = 0.8, minPts = 10)
+
+# Prepare data for plotting
+df <- as_tibble(data)
+colnames(df) <- c("x", "y")
+df$cluster <- factor(db_res$cluster)
+
+# Plot DBSCAN results
+ggplot(df, aes(x = x, y = y, color = cluster)) +
+  geom_point(size = 2) +
+  ggtitle("DBSCAN Clustering Results")
+```
+
+## Your Task
+
+Follow the instructions above to create your analysis. In your write-up, include code, figures, and discussion. Explain how your choice of parameters affects the identification of clusters and noise.
+

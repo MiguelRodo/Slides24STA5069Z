@@ -1,0 +1,83 @@
+---
+title: "Prac: Graph-Based Clustering with the Leiden Algorithm"
+subtitle: "Clustering via Graph Community Detection"
+date: "2025-02-20"
+format:
+  html:
+    self-contained: true
+toc: true
+toc-depth: 2
+---
+
+## Overview
+
+In this practical, you will build a graph from a dataset and apply the Leiden algorithm to detect clusters. You will:
+
+- Construct a k‑nearest neighbor (kNN) graph from your data.
+- Apply the Leiden algorithm to identify communities (clusters).
+- Visualize the graph and the clustering assignments.
+- Discuss the modularity measure and compare the results with other clustering approaches.
+
+## Instructions
+
+1. **Data Preparation:**  
+   Simulate or load a dataset (e.g., two-dimensional points).
+
+2. **Graph Construction:**  
+   - Use the `FNN` package to compute k‑nearest neighbors.
+   - Build an edge list and create an undirected graph using the `igraph` package.
+   - (Optional) Compute a distance matrix and set up a weighted graph.
+
+3. **Leiden Clustering:**  
+   - Run the Leiden algorithm (using `cluster_leiden()` from `igraph` or another package).
+   - Extract the community membership.
+
+4. **Visualization:**  
+   - Plot the graph with nodes colored by community.
+   - Also, plot the raw data with the cluster assignments.
+
+5. **Discussion:**  
+   Discuss how graph-based clustering captures local structure and compare the advantages of the Leiden algorithm over traditional methods.
+
+```{r}
+#| include: false
+#| eval: false
+library(FNN)
+library(igraph)
+library(ggplot2)
+library(tibble)
+
+# Simulate a dataset
+set.seed(123)
+data <- rbind(
+  MASS::mvrnorm(n = 100, mu = c(0, 0), Sigma = diag(2)),
+  MASS::mvrnorm(n = 100, mu = c(3, 3), Sigma = diag(2))
+)
+
+# Build a kNN graph (using k = 5)
+k <- 5
+knn_res <- get.knn(data, k = k)
+edge_list <- do.call(rbind, lapply(1:nrow(data), function(i) {
+  data.frame(from = i, to = knn_res$nn.index[i, ])
+}))
+
+g_knn <- graph_from_data_frame(edge_list, directed = FALSE)
+g_knn <- simplify(g_knn)
+
+# Apply the Leiden algorithm (ensure you have an implementation or use cluster_leiden from igraph)
+leiden_res <- cluster_leiden(g_knn, objective_function = "modularity", resolution = 0.2)
+membership_vec <- membership(leiden_res)
+
+# Visualize clusters on the data
+df <- as_tibble(data)
+colnames(df) <- c("x", "y")
+df$cluster <- factor(membership_vec)
+
+ggplot(df, aes(x = x, y = y, color = cluster)) +
+  geom_point(size = 2) +
+  ggtitle("Leiden Clustering on Simulated Data")
+```
+
+## Your Task
+
+Complete the steps above and include your code and plots. In your discussion, explain the concept of modularity and the benefits of graph-based clustering for identifying non-spherical clusters.

@@ -1,0 +1,80 @@
+---
+title: "Prac: OPTICS and Reachability Analysis"
+subtitle: "Using OPTICS to Explore Clustering Structure"
+date: "2025-02-20"
+format:
+  html:
+    self-contained: true
+toc: true
+toc-depth: 2
+---
+
+## Overview
+
+This practical introduces OPTICS—a density-based clustering method that produces an ordering of the data and a reachability plot. You will:
+
+- Simulate or load a 2D dataset.
+- Run the OPTICS algorithm using the `dbscan` package.
+- Generate and interpret the reachability plot.
+- Extract clusters using both the DBSCAN extraction method and the Xi method.
+- Compare the clustering outcomes.
+
+## Instructions
+
+1. **Data Simulation:**  
+   Use a dataset with two clusters of different densities (or use your own).
+
+2. **Running OPTICS:**  
+   - Apply the `optics()` function from the `dbscan` package.
+   - Plot the reachability plot to identify valleys (dense regions).
+
+3. **Cluster Extraction:**  
+   - Use `extractDBSCAN()` to extract clusters using a fixed *eps* threshold.
+   - Use `extractXi()` to extract clusters based on the steepness parameter $\xi$.
+
+4. **Visualization and Discussion:**  
+   - Visualize the clusters (scatter plots with cluster labels).
+   - Write a brief discussion comparing the two extraction methods and their advantages.
+
+```{r}
+#| include: false
+#| eval: false
+library(dbscan)
+library(ggplot2)
+library(tibble)
+
+# Simulate data (similar to the DBSCAN prac)
+set.seed(123)
+data <- rbind(
+  MASS::mvrnorm(n = 100, mu = c(0, 0), Sigma = diag(2)),
+  MASS::mvrnorm(n = 100, mu = c(3, 3), Sigma = diag(2))
+)
+
+# Run OPTICS with minPts = 10
+opt_res <- optics(data, minPts = 10, eps = 1.5)
+
+# Plot the reachability plot
+plot(opt_res)
+
+# Extract clusters using DBSCAN method
+clusters_db <- extractDBSCAN(opt_res, eps_cl = 0.6)
+df <- as_tibble(data)
+colnames(df) <- c("x", "y")
+df$cluster <- factor(clusters_db$cluster)
+
+ggplot(df, aes(x = x, y = y, color = cluster)) +
+  geom_point(size = 2) +
+  ggtitle("OPTICS Clustering (DBSCAN Extraction)")
+
+# Extract clusters using Xi method
+clusters_xi <- extractXi(opt_res, xi = 0.04)
+df$cluster_xi <- factor(clusters_xi$cluster)
+
+ggplot(df, aes(x = x, y = y, color = cluster_xi)) +
+  geom_point(size = 2) +
+  ggtitle("OPTICS Clustering (Xi Method)")
+```
+
+## Your Task
+
+Complete the tasks above and include your code and figures. In your report, discuss how the reachability plot assists in understanding the density structure of your dataset and compare the two extraction methods.

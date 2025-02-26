@@ -1,0 +1,68 @@
+---
+title: "Prac: Evaluating Cluster Stability and Choosing the Number of Clusters"
+subtitle: "Cluster Validation and Stability Analysis"
+date: "2025-02-20"
+format:
+  html:
+    self-contained: true
+toc: true
+toc-depth: 2
+---
+
+**NOTE: I WILL NOT ASSESS CLUSTER STABILITY IN THE EXAM, SO THIS IS PURELY FOR YOUR ENRICHMENT**
+
+## Overview
+
+Choosing the correct number of clusters is a challenging problem. In this practical, you will:
+
+- Use a clustering algorithm (e.g., k‑means) on a simulated dataset.
+- Compute evaluation metrics such as the silhouette width, gap statistic, and agglomerative coefficient.
+- Assess cluster stability using bootstrap resampling and the Jaccard similarity coefficient (via the `fpc` package’s `clusterboot()` function).
+- Discuss the pros and cons of different approaches for selecting the number of clusters.
+
+## Instructions
+
+1. **Data Simulation:**  
+   Generate a dataset with two or more clusters.
+
+2. **Clustering and Evaluation:**  
+   - Run k‑means clustering for a range of *k* values.
+   - Compute the silhouette statistic and gap statistic for each *k*.
+
+3. **Stability Analysis:**  
+   - Use the `clusterboot()` function from the `fpc` package to assess the stability of clusters.
+   - Report the average Jaccard coefficient for each cluster.
+
+4. **Discussion:**  
+   Summarize how these metrics help in deciding the number of clusters and comment on the robustness of your clustering solution.
+
+```{r}
+#| include: false
+#| eval: false
+
+library(fpc)
+library(ggplot2)
+library(tibble)
+library(cluster)
+
+# Simulate data with two clusters
+set.seed(123)
+data <- rbind(
+  MASS::mvrnorm(n = 100, mu = c(0, 0), Sigma = diag(2)),
+  MASS::mvrnorm(n = 100, mu = c(3, 3), Sigma = diag(2))
+)
+
+# Run k-means clustering for k = 2 to 4
+wss <- sapply(2:4, function(k) {
+  kmeans(data, centers = k, nstart = 25)$tot.withinss
+})
+plot(2:4, wss, type = "b", xlab = "Number of clusters", ylab = "Within-cluster Sum of Squares")
+
+# Assess stability with clusterboot
+cb <- clusterboot(data, clustermethod = kmeansCBI, k = 2, B = 100)
+print(cb$bootmean)
+```
+
+## Your Task
+
+Complete the exercises above, include your code and visualizations, and write a short report (approximately 2–3 pages) discussing your findings regarding the optimal number of clusters and the stability of your clusters.
