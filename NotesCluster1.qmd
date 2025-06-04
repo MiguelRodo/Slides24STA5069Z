@@ -6,6 +6,8 @@ format:
     embed-resources: true
     toc: true
     toc-depth: 3
+execute:
+  echo: false
 ---
 
 # Choosing the Number of Clusters via the Gap Statistic (Log-Scale Version)
